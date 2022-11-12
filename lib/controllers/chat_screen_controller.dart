@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/services/chat_service.dart';
+import 'package:i_am_volunteer/services/locator.dart';
 
-class ChatScreenController extends GetxController{
+class ChatScreenController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  TextEditingController messageText=TextEditingController();
-  FocusNode messageTextFocus=FocusNode();
-  ScrollController scrollController=ScrollController();
+  TextEditingController messageText = TextEditingController();
+  FocusNode messageTextFocus = FocusNode();
+  ScrollController scrollController = ScrollController();
+  final chatService = locator.get<ChatService>();
+
   @override
   void onInit() {
     super.onInit();
     scrollToBottom();
   }
+
   @override
   void dispose() {
     messageText.dispose();
@@ -18,23 +23,25 @@ class ChatScreenController extends GetxController{
     super.dispose();
   }
 
-  void removeFocus(){
-    if(messageTextFocus.hasFocus){
+  void removeFocus() {
+    if (messageTextFocus.hasFocus) {
       messageTextFocus.unfocus();
     }
   }
-  void scrollToBottom(){
-    Future.delayed(const Duration(milliseconds: 100 ),(){
+
+  void scrollToBottom() {
+    Future.delayed(const Duration(milliseconds: 100), () {
       scrollController.animateTo(scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 1),curve: Curves.fastOutSlowIn);
+          duration: const Duration(milliseconds: 1),
+          curve: Curves.fastOutSlowIn);
     });
   }
-  Future<bool> onBack() async{
+
+  Future<bool> onBack() async {
     removeFocus();
-   if(!messageTextFocus.hasFocus){
+    if (!messageTextFocus.hasFocus) {
       Get.back();
     }
     return Future.value(false);
-
   }
 }

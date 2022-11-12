@@ -5,50 +5,45 @@ import 'package:i_am_volunteer/controllers/chat_screen_controller.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/custom_scaffold.dart';
 
-class ChatScreen extends StatelessWidget{
+class ChatScreen extends StatelessWidget {
   final controller = Get.find<ChatScreenController>();
   ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-   return CustomScaffold(
-     body: _getBody(),
-     onWillPop: controller.onBack,
-     scaffoldKey: controller.scaffoldKey,
-     screenName: 'Chat Screen');
-  }
-
-  Widget _getBody(){
-    return Container(
-        height: Get.height,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 15,right: 15,bottom: 80),
-              child: SingleChildScrollView(
-                controller: controller.scrollController,
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children:[
-                    senderMessage(senderMessage: 'Hey peeps!'),
-                    recipientMessage(recipientMessage: 'Hey Admin!'),
-                    senderMessage(senderMessage: 'How are you?'),
-                    recipientMessage(recipientMessage: 'I\'m good and you?'),
-                    senderMessage(senderMessage: 'Good..'),
-                    senderMessage(senderMessage: 'Did you apply for event? '),
-                    recipientMessage(recipientMessage: 'Still not'),
-                  ],
-                ),
-              ),
-            ),
-            widgetTypeMessage(),
-          ],
-        )
+    return CustomScaffold(
+      body: _getBody(),
+      onWillPop: controller.onBack,
+      scaffoldKey: controller.scaffoldKey,
+      screenName: 'Chat Screen',
     );
   }
-  Widget widgetTypeMessage(){
+
+  Widget _getBody() {
+    return SizedBox(
+      height: Get.height,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 80),
+            child: SingleChildScrollView(
+              controller: controller.scrollController,
+              physics: const BouncingScrollPhysics(),
+              child: StreamBuilder(
+                stream: controller.chatService.chatStreams(),
+                builder: (context, snapshot) {},
+              ),
+            ),
+          ),
+          widgetTypeMessage(),
+        ],
+      ),
+    );
+  }
+
+  Widget widgetTypeMessage() {
     return Padding(
-        padding: const EdgeInsets.only(left: 14,right: 14,bottom: 3,top: 4),
+        padding: const EdgeInsets.only(left: 14, right: 14, bottom: 3, top: 4),
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Column(
@@ -89,8 +84,8 @@ class ChatScreen extends StatelessWidget{
                         filled: true,
                         contentPadding: const EdgeInsets.all(16),
                         fillColor: Colors.grey[300],
-                        prefixIcon:  Icon(Icons.emoji_emotions_sharp,color: AppColors.heading.withOpacity(0.3)),
-
+                        prefixIcon: Icon(Icons.emoji_emotions_sharp,
+                            color: AppColors.heading.withOpacity(0.3)),
                       ),
                     ),
                   ),
@@ -111,12 +106,10 @@ class ChatScreen extends StatelessWidget{
               ),
             ],
           ),
-
-        )
-    );
+        ));
   }
 
-  Widget senderMessage({required String senderMessage}){
+  Widget senderMessage({required String senderMessage}) {
     return Container(
       width: Get.width,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -124,26 +117,36 @@ class ChatScreen extends StatelessWidget{
       child: Container(
         decoration: BoxDecoration(
             color: AppColors.primary,
-            borderRadius: const BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20),bottomRight: Radius.circular(20))
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20))),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+        child: Text(
+          senderMessage,
+          style: const TextStyle(color: Colors.white),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 16),
-        child: Text(senderMessage,style: const TextStyle(color: Colors.white),),
       ),
     );
   }
 
-  Widget recipientMessage({required String recipientMessage}){
+  Widget recipientMessage({required String recipientMessage}) {
     return Container(
       width: Get.width,
       margin: const EdgeInsets.symmetric(vertical: 8),
       alignment: Alignment.centerRight,
       child: Container(
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
             color: AppColors.secondary,
-            borderRadius: const BorderRadius.only(topRight: Radius.circular(20),topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(20),
+                topLeft: Radius.circular(20),
+                bottomLeft: Radius.circular(20))),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+        child: Text(
+          recipientMessage,
+          style: const TextStyle(color: Colors.black),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 16),
-        child:Text(recipientMessage,style: const TextStyle(color: Colors.black),),
       ),
     );
   }
