@@ -1,24 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:i_am_volunteer/services/locator.dart';
 
 import 'routes/app_routes.dart';
+import 'services/messaging_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  int? role = prefs.getInt("role");
-  String? email = prefs.getString("email");
-  String? docId = prefs.getString("docId");
-  if(email ==null) runApp(const IAmVolunteer());
-  else if(role=='user'){
-
-  }
-  else if(role == 'admin'){
-
-  }
+  init();
+  locator.get<MessagingService>().initMessaging();
+  runApp(const IAmVolunteer());
 }
 
 class IAmVolunteer extends StatelessWidget {

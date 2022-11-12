@@ -18,14 +18,26 @@ class AuthDashboard extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 30,left: 20,right: 20),
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(text: 'Welcome',color: AppColors.primary,fontSize: 25,weight: FontWeight.w800,),
+              CustomText(
+                text: 'Welcome',
+                color: AppColors.primary,
+                fontSize: 25,
+                weight: FontWeight.w800,
+              ),
               const SizedBox(height: 10),
-              CustomText(text: 'Please Choose Login or Register for continue our app',color: AppColors.heading,fontSize: 18,weight: FontWeight.w500,),
-              const SizedBox(height: 100,),
+              CustomText(
+                text: 'Please Choose Login or Register for continue our app',
+                color: AppColors.heading,
+                fontSize: 18,
+                weight: FontWeight.w500,
+              ),
+              const SizedBox(
+                height: 100,
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

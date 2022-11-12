@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import 'app_colors.dart';
 
 class UiUtils {
   static const vertSpace10 = SizedBox(
@@ -26,4 +29,19 @@ class UiUtils {
     width: 40,
   );
 
+  static void showPendingToast(String text) {
+    Fluttertoast.showToast(
+      msg: text,
+      backgroundColor: Colors.red,
+      toastLength: Toast.LENGTH_SHORT,
+    );
+  }
+
+  static final loader = Center(
+    child: CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation(
+        AppColors.primary,
+      ),
+    ),
+  );
 }
