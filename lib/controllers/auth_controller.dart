@@ -2,29 +2,113 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/services/auth_service.dart';
+import 'package:i_am_volunteer/services/locator.dart';
+import 'package:i_am_volunteer/utils/ui_utils.dart';
 
+import '../models/user_model.dart';
 import '../routes/app_routes.dart';
+import '../services/messaging_service.dart';
 
 class AuthController extends GetxController {
   final RxDouble splashLoading = 0.0.obs;
   Timer? timer;
+  final registerFormKey = GlobalKey<FormState>();
+  final loginFormKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final messaging = locator.get<MessagingService>();
+  final authService = locator.get<AuthService>();
+  RxBool loading = false.obs;
+
   @override
   void onInit() {
     super.onInit();
-    timer = Timer.periodic(
-      const Duration(milliseconds: 50),
-      (timer) {
-        splashLoading.value += 0.025;
-        if (splashLoading.value >= 1.0) {
-          Get.toNamed(
-            AppRoutes.login,
-          );
-          timer.cancel();
-        }
-      },
-    );
+    init();
+  }
+
+  Future<void> init() async {
+    await Future.delayed(const Duration(seconds: 3), () async {
+      if (await authService.isLoggedIn()) {
+        Get.offAllNamed(
+          AppRoutes.homeScreen,
+        );
+      } else {
+        Get.toNamed(
+          AppRoutes.login,
+        );
+      }
+    });
+  }
+
+  Future<void> signUp() async {
+    if (registerFormKey.currentState!.validate()) {
+      loading.value = true;
+      String email = emailController.text.trim();
+      String password = passwordController.text.trim();
+      String name = nameController.text.trim();
+      String? token = await messaging.getToken();
+      final data = {
+        'name': name,
+        'email': email,
+        'role': Role.user.name,
+        'token': token,
+      };
+      UserModel user = UserModel.fromJson(data);
+      final isUserCreated = await authService.createUser(
+        user: user,
+        password: password,
+      );
+      if (isUserCreated) {
+        loading.value = false;
+        UiUtils.showPendingToast(
+          'Account is pending verification\n Please wait till the verification complete.',
+        );
+        Get.toNamed(
+          AppRoutes.homeScreen,
+        );
+      } else {
+        loading.value = false;
+      }
+    }
+    // userCredential = await FirebaseAuth.instance
+    //     .createUserWithEmailAndPassword(
+    //     email: controller.emailController.text,
+    //     password: controller.passwordController.text);
+    // DocumentReference ref = FirebaseFirestore.instance
+    //     .collection('Users')
+    //     .doc(FirebaseAuth.instance.currentUser!.uid);
+    // await ref.set({
+    //   'docId': ref.id,
+    //   'token': token,
+    //   'email': controller.emailController.text.trim(),
+    //   'role': "user",
+    //   'name': controller.nameController.text.trim(),
+    //   'password': controller.nameController.text.trim(),
+    // }).whenComplete(() {
+    //   flutterToast(
+    //       msg:
+    //       'Account is pending verification\n Please wait till the verification complete.',
+    //       bgColor: Colors.red,
+    //       toastLength: Toast.LENGTH_SHORT);
+    // });
+  }
+
+  Future<void> login() async {
+    if (loginFormKey.currentState!.validate()) {
+      loading.value = true;
+      final email = emailController.text.trim();
+      final password = passwordController.text.trim();
+      final isLoggedIn = await authService.login(
+        email: email,
+        password: password,
+      );
+      if (isLoggedIn) {
+        Get.offAllNamed(AppRoutes.homeScreen);
+      } else {
+        loading.value = false;
+      }
+    }
   }
 }

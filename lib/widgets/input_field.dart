@@ -8,6 +8,8 @@ class InputField extends StatelessWidget {
   final IconData? suffixIcon;
   final double? paddingVertical;
   final double? paddingHorizontal;
+  final String? Function(String?)? validator;
+  final bool hideText;
 
   const InputField({
     super.key,
@@ -17,7 +19,10 @@ class InputField extends StatelessWidget {
     this.suffixIcon,
     this.paddingVertical = 30,
     this.paddingHorizontal = 20,
+    this.validator,
+    this.hideText = false,
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,34 +32,31 @@ class InputField extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                  color: AppColors.primary.withOpacity(0.1),
-                  blurRadius: 2
-              )
-            ]
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(color: AppColors.primary.withOpacity(0.1), blurRadius: 2),
+          ],
         ),
-        child:TextFormField(
+        child: TextFormField(
           controller: controller,
+          validator: validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          obscureText: hideText,
           decoration: InputDecoration(
             prefixIcon: prefixIcon != null
                 ? Icon(
-              prefixIcon,
-            )
-                :null,
+                    prefixIcon,
+                  )
+                : null,
             suffixIcon: suffixIcon != null
                 ? Icon(
-              suffixIcon,
-            )
+                    suffixIcon,
+                  )
                 : null,
-            contentPadding: const EdgeInsets.only(
-                top: 15,
-                bottom: 15,
-                left: 10
-            ),
-            hintStyle:TextStyle(
+            contentPadding:
+                const EdgeInsets.only(top: 15, bottom: 15, left: 10),
+            hintStyle: TextStyle(
               color: Colors.black.withOpacity(0.3),
             ),
             hintText: hint,

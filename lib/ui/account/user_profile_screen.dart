@@ -10,7 +10,7 @@ import '../../utils/app_colors.dart';
 import '../../widgets/custom_scaffold.dart';
 import '../../widgets/custom_text.dart';
 
-class UserProfileScreen extends StatelessWidget{
+class UserProfileScreen extends StatelessWidget {
   final controller = Get.find<UserProfileScreenController>();
   UserProfileScreen({super.key});
 
@@ -20,9 +20,11 @@ class UserProfileScreen extends StatelessWidget{
       body: _getBody(),
       onWillPop: controller.onBack,
       scaffoldKey: controller.scaffoldKey,
-      screenName: 'User Profile Screen',);
+      screenName: 'User Profile Screen',
+    );
   }
-  Widget _getBody(){
+
+  Widget _getBody() {
     return Stack(
       children: [
         Column(
@@ -31,8 +33,13 @@ class UserProfileScreen extends StatelessWidget{
               height: 150,
               width: Get.width,
               color: AppColors.primary.withOpacity(0.07),
-              padding: const EdgeInsets.only(top: 30,left: 20),
-              child: CustomText(text: 'User',fontSize: 30,color: AppColors.primary,weight: FontWeight.w700,),
+              padding: const EdgeInsets.only(top: 30, left: 20),
+              child: CustomText(
+                text: 'User',
+                fontSize: 30,
+                color: AppColors.primary,
+                weight: FontWeight.w700,
+              ),
             )
           ],
         ),
@@ -40,52 +47,90 @@ class UserProfileScreen extends StatelessWidget{
           left: 20,
           right: 20,
           top: 130,
-          bottom:70,
+          bottom: 70,
           child: Container(
-              width: Get.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        color: AppColors.primary.withOpacity(0.2),
-                        blurRadius: 8
-                    )
-                  ]
+            width: Get.width,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                      color: AppColors.primary.withOpacity(0.2), blurRadius: 8)
+                ]),
+            padding: const EdgeInsets.only(top: 44, left: 20, right: 20),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  CustomText(
+                    text: 'Name Xyz',
+                    color: AppColors.primary,
+                    weight: FontWeight.w700,
+                  ),
+                  CustomText(
+                    text: 'email123@gmail.com',
+                    color: AppColors.heading,
+                    weight: FontWeight.w500,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  InputField(
+                    paddingHorizontal: 0,
+                    paddingVertical: 0,
+                    controller: controller.nameController,
+                    hint: 'Name',
+                    suffixIcon: Icons.edit,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputField(
+                    paddingHorizontal: 0,
+                    paddingVertical: 0,
+                    controller: controller.emailController,
+                    hint: 'Email',
+                    suffixIcon: Icons.edit,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InputField(
+                    paddingHorizontal: 0,
+                    paddingVertical: 0,
+                    controller: controller.passwordController,
+                    hint: 'Password Change',
+                    suffixIcon: Icons.edit,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                    width: Get.width,
+                    height: 48,
+                    label: 'Log Out',
+                    onTap: () {},
+                    color: AppColors.primary,
+                    textColor: AppColors.white,
+                    isShadow: false,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CustomButton(
+                    height: 48,
+                    label: 'Save',
+                    onTap: () {},
+                    color: AppColors.primary.withOpacity(0.07),
+                    textColor: AppColors.primary,
+                    isShadow: false,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
-              padding: const EdgeInsets.only(top: 44,left: 20,right: 20),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    CustomText(text: 'Name Xyz',color: AppColors.primary,weight: FontWeight.w700,),
-                    CustomText(text: 'email123@gmail.com',color: AppColors.heading,weight: FontWeight.w500,),
-                    const SizedBox(height: 30,),
-                    InputField(
-                      paddingHorizontal: 0,
-                      paddingVertical: 0,
-                      controller: controller.nameController,hint: 'Name',suffixIcon: Icons.edit,),
-                    const SizedBox(height: 20,),
-                    InputField(
-                      paddingHorizontal: 0,
-                      paddingVertical: 0,
-                      controller: controller.emailController,hint: 'Email',suffixIcon: Icons.edit,),
-                    const SizedBox(height: 20,),
-                    InputField(
-                      paddingHorizontal: 0,
-                      paddingVertical: 0,
-                      controller: controller.passwordController,hint: 'Password Change',suffixIcon: Icons.edit,),
-                    const SizedBox(height: 20,),
-                    CustomButton(
-                        width: Get.width,
-                        height: 48,
-                        label: 'Log Out', onTap: (){},color: AppColors.primary,textColor: AppColors.white,isShadow: false,),
-                    const SizedBox(height: 20,),
-                    CustomButton(height: 48,label: 'Save', onTap: (){},color: AppColors.primary.withOpacity(0.07),textColor: AppColors.primary,isShadow: false,),
-                    const SizedBox(height: 20,),
-                  ],
-                ),
-              )
+            ),
           ),
         ),
         Padding(
@@ -103,5 +148,4 @@ class UserProfileScreen extends StatelessWidget{
       ],
     );
   }
-
 }
