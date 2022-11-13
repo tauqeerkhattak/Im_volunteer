@@ -4,6 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'app_colors.dart';
 
 class UiUtils {
+  static const vertSpace5 = SizedBox(
+    height: 5,
+  );
   static const vertSpace10 = SizedBox(
     height: 10,
   );

@@ -32,4 +32,6 @@ class UserModel {
     data['token'] = token;
     return data;
   }
+
+  bool isAdmin() => role == Role.admin;
 }

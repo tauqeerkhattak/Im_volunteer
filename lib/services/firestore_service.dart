@@ -33,4 +33,16 @@ class FirestoreService {
       return null;
     }
   }
+
+  Future<List<String>> getAdminUids() async {
+    final docs = await _db
+        .collection('Users')
+        .where('role', isEqualTo: Role.admin.name)
+        .get();
+    List<String> uids = List.generate(docs.size, (index) {
+      final user = UserModel.fromJson(docs.docs[index].data());
+      return user.uid!;
+    });
+    return uids;
+  }
 }
