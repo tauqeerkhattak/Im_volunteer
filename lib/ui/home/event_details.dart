@@ -1,23 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/controllers/event_detail_controller.dart';
 import 'package:i_am_volunteer/controllers/home_controller.dart';
-import 'package:i_am_volunteer/routes/app_routes.dart';
+import 'package:i_am_volunteer/utils/app_colors.dart';
+import 'package:i_am_volunteer/widgets/custom_scaffold.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 
-import '../../utils/app_assets.dart';
-import '../../utils/app_colors.dart';
-import '../../widgets/custom_scaffold.dart';
+class EventDetails extends StatelessWidget {
+  final controller = Get.put(EventDetailsScreenController());
+  final homeController = Get.find<HomeScreenController>();
 
-class HomeScreen extends StatelessWidget {
-  final controller = Get.find<HomeScreenController>();
-  HomeScreen({super.key});
+  EventDetails({super.key});
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       body: _getBody(),
+      onWillPop: controller.onBack,
       scaffoldKey: controller.scaffoldKey,
-      screenName: 'Home Screen',
+      screenName: 'Event Details',
     );
   }
 
@@ -26,22 +27,6 @@ class HomeScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 20),
       child: Column(
         children: [
-          // SingleChildScrollView(
-          //   scrollDirection: Axis.horizontal,
-          //   physics: const BouncingScrollPhysics(),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.start,
-          //     children: [
-          //       statusWidget(image: AppAssets.personImage1, text: 'Dr. ABCD'),
-          //       statusWidget(image: AppAssets.personImage2, text: 'Dr. CDEF'),
-          //       statusWidget(image: AppAssets.personImage3, text: 'Dr. IJKL'),
-          //       statusWidget(image: AppAssets.personImage1, text: 'Dr. ABCDEF'),
-          //       statusWidget(image: AppAssets.personImage2, text: 'Dr. CDEFGHI'),
-          //       statusWidget(image: AppAssets.personImage3, text: 'Dr. IJKLMNO'),
-          //
-          //     ],
-          //   ),
-          // ),
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Users')
@@ -78,61 +63,8 @@ class HomeScreen extends StatelessWidget {
                 //   }),
                 // );
               }),
-
-          StreamBuilder<QuerySnapshot>(
-              stream:
-              FirebaseFirestore.instance.collection('Events').snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
-                }
-                if (snapshot.data!.size == 0) {
-                  return Center(child: Text("There is no Lead"));
-                }
-                return Expanded(
-                    child: ListView(
-                        shrinkWrap: true,
-                        // itemCount: snapshot.data!.docs.length,
-                        // itemBuilder: ((context, index) {
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
-                          // print(Text(data['name']));
-                          // print("${base64Decode(data['image3'])}");
-                          // return LeadgenerationScreen(
-                          //     text: data['name'],
-                          //     icon: FontAwesomeIcons.hourglassEnd,
-                          //     press: () {
-                          //       // print("${base64Decode(data['image3'])}");
-                          //       // print("${Image.memory(base64Decode("put your base 64 string"))}");
-                          //       showDialog(
-                          //           context: context,
-                          //           builder: (BuildContext context) {
-                          //             return ShowDialog(data);
-                          //           });
-                          //     });
-                          return postWidget(
-                              title: data['title'],
-                              image: data['image'],
-                              name: data['adminName'],
-                              profileImage: data['adminImage'],
-                              openEvent: data['openEvent']
-                          );
-                        }).toList()));
-                //     return Text('nodata');
-                //   }),
-                // );
-              }),
-
-          // postWidget(image: AppAssets.eventPhoto, name: 'Dr. IJKL', profileImage: AppAssets.personImage3,openEvent: false),
-          // postWidget(image: AppAssets.eventPhoto2, name: 'Dr. CDEF', profileImage: AppAssets.personImage2,openEvent: true)
-        ],
+          // postWidget(title: Get.parameters['title'], image: image, name: name, profileImage: profileImage, openEvent: openEvent)
+        ]
       ),
     );
   }
@@ -226,18 +158,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget postImage(String image) {
-    return InkWell(
-      onTap: (){
-        Get.toNamed(AppRoutes.eventDetails);
-      },
-      child: Container(
-        height: 200,
-        width: Get.width,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.network(image, fit: BoxFit.cover)),
-      ),
+    return Container(
+      height: 200,
+      width: Get.width,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.network(image, fit: BoxFit.cover)),
     );
   }
 
@@ -251,7 +178,7 @@ class HomeScreen extends StatelessWidget {
         isEventOpen
             ? GestureDetector(
           onTap: () {
-            controller.onApplyVolunteer();
+            homeController.onApplyVolunteer();
           },
           child: Container(
             height: 40,

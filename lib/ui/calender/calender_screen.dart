@@ -1,23 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/calender_screen_controller.dart';
+import 'package:i_am_volunteer/ui/calender/day_events.dart';
 import 'package:i_am_volunteer/utils/app_colors.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../widgets/custom_scaffold.dart';
 
+
 class CalenderScreen extends StatelessWidget{
   final controller = Get.find<CalenderScreenController>();
+
   CalenderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: _getBody(),
+      body: _getBody(controller.toHighlight),
       onWillPop: controller.onWillPop,
       scaffoldKey: controller.scaffoldKey,
       screenName: 'Calender Screen',);
   }
-  Widget _getBody(){
+  Widget _getBody(List<DateTime> toHighlight){
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -51,6 +56,43 @@ class CalenderScreen extends StatelessWidget{
                       controller.focusedDay.value = focusedDay;
                   }
                 },
+                calendarBuilders: CalendarBuilders(
+                  defaultBuilder: (context, day, focusedDay) {
+                    for (DateTime d in toHighlight) {
+
+                      int selectedDT=d.millisecondsSinceEpoch;
+                      if (day.day == d.day &&
+                          day.month == d.month &&
+                          day.year == d.year) {
+                        return InkWell(
+                          onTap: (){
+                            // var event = FirebaseFirestore.instance
+                            //     .collection('Users')
+                            //     .where("role", isEqualTo: "admin").snapshots();
+                            // print(event.first);
+                            Get.to(()=>DayEvents(),arguments: selectedDT);
+                            // Get.bottomSheet(Text("hello"));/
+                          },
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.lightGreen,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${day.day}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    return null;
+                  },
+                ),
                 /*onFormatChanged: (format) {
                   if (controller.calendarFormat.value != format) {
                       controller.calendarFormat.value = format;
@@ -67,3 +109,5 @@ class CalenderScreen extends StatelessWidget{
     );
   }
 }
+
+

@@ -3,6 +3,7 @@ import 'package:i_am_volunteer/ui/account/user_profile_screen.dart';
 import 'package:i_am_volunteer/ui/account/volunteer_profile_screen.dart';
 import 'package:i_am_volunteer/ui/calender/calender_screen.dart';
 import 'package:i_am_volunteer/ui/chat/chat_screen.dart';
+import 'package:i_am_volunteer/ui/home/event_details.dart';
 import 'package:i_am_volunteer/ui/home/home_screen.dart';
 import 'package:i_am_volunteer/ui/home/volunteer_registration_screen.dart';
 import 'package:i_am_volunteer/ui/notification/notification_screen.dart';
@@ -30,6 +31,8 @@ class AppRoutes {
   static String volunteerProfileScreen = '/volunteer_profile_screen';
   static String chatScreen = '/chat_screen';
   static String kBottomNavigationController = "/BOTTOM_NAVBAR_Controller";
+  static String eventDetails = '/event_details';
+
 
   static List<GetPage> pages = [
     GetPage(
@@ -55,6 +58,11 @@ class AppRoutes {
     GetPage(
       name:homeScreen,
       page: () => HomeScreen(),
+      binding: ScreenBinding(),
+    ),
+    GetPage(
+      name:eventDetails,
+      page: () => EventDetails(),
       binding: ScreenBinding(),
     ),
     GetPage(
