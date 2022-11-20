@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import '../main.dart';
+
 class MessagingService {
   final _instance = FirebaseMessaging.instance;
 
@@ -18,10 +20,8 @@ class MessagingService {
     FirebaseMessaging.onMessage.listen((event) {
       log('Notification received on foreground: ${event.notification?.title}!');
     });
-    FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
-  }
-
-  Future<void> _onBackgroundMessage(RemoteMessage remoteMessage) async {
-    log('Background Notification received: ${remoteMessage.notification?.title}!');
+    FirebaseMessaging.onBackgroundMessage(
+      onBackgroundMessage,
+    );
   }
 }
