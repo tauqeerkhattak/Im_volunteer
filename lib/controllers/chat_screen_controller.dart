@@ -4,31 +4,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/services/chat_service.dart';
+import 'package:i_am_volunteer/services/firestore_service.dart';
 import 'package:i_am_volunteer/services/locator.dart';
 
 import '../models/chat_item.dart';
+import '../routes/app_routes.dart';
 import '../services/auth_service.dart';
 
 class ChatScreenController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  RxBool chatLoading = false.obs;
   RxBool loading = false.obs;
   TextEditingController messageText = TextEditingController();
   FocusNode messageTextFocus = FocusNode();
   ScrollController scrollController = ScrollController();
   final chatService = locator.get<ChatService>();
   final authService = locator.get<AuthService>();
+  final fireService = locator.get<FirestoreService>();
   Rx<List<ChatItem>> messages = Rx<List<ChatItem>>([]);
 
-  @override
-  void onInit() {
-    super.onInit();
-    scrollToBottom();
-    createChat();
-    subscribeForMessages();
-  }
-
-  void subscribeForMessages() {
-    chatService.chatStreams().listen((event) {
+  void subscribeForMessages(String chatID) {
+    chatService.chatStreams(chatID).listen((event) {
       if (event.isNotEmpty) {
         const equality = ListEquality();
         if (!equality.equals(event, messages.value)) {
@@ -39,14 +35,50 @@ class ChatScreenController extends GetxController {
   }
 
   Future<void> createChat() async {
-    loading.value = true;
+    chatLoading.value = true;
     if (await chatService.chatExists()) {
       log('Chat exists');
     } else {
       log('chat does not exist!');
       await chatService.createChat();
     }
+    chatLoading.value = false;
+  }
+
+  Future<void> getChatWithUser(String userUid) async {
+    loading.value = true;
+    final chatID = await chatService.getAdminChatWithUser(userUid);
     loading.value = false;
+    Get.toNamed(
+      AppRoutes.chatScreen,
+      arguments: {
+        'chatID': chatID,
+      },
+    );
+  }
+
+  Future<void> createChatWithAdmin() async {
+    chatLoading.value = true;
+    if (await chatService.adminChatExists()) {
+      final chatID = await chatService.getUserChatWithAdminID();
+      chatLoading.value = false;
+      Get.toNamed(
+        AppRoutes.chatScreen,
+        arguments: {
+          'chatID': chatID,
+        },
+      );
+    } else {
+      log('chat does not exist!');
+      final chatID = await chatService.createUserChatWithAdmin();
+      chatLoading.value = false;
+      Get.toNamed(
+        AppRoutes.chatScreen,
+        arguments: {
+          'chatID': chatID,
+        },
+      );
+    }
   }
 
   @override
@@ -78,11 +110,11 @@ class ChatScreenController extends GetxController {
     return Future.value(false);
   }
 
-  Future<void> sendText() async {
+  Future<void> sendText(String chatID) async {
     String text = messageText.text.trim();
     if (text.isNotEmpty) {
       messageText.clear();
-      await chatService.sendChat(text);
+      await chatService.sendChat(text, chatID);
     }
   }
 }

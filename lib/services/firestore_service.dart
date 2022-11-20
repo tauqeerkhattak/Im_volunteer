@@ -45,4 +45,16 @@ class FirestoreService {
     });
     return uids;
   }
+
+  Future<UserModel> getUserByUid(String uid) async {
+    final userDoc = await _db.collection('Users').doc(uid).get();
+    final user = UserModel.fromJson(userDoc.data()!);
+    return user;
+  }
+
+  Future<String> getNameById(String uid) async {
+    final userDoc = await _db.collection('Users').doc(uid).get();
+    final user = UserModel.fromJson(userDoc.data()!);
+    return user.name!;
+  }
 }

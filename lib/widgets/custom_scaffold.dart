@@ -11,6 +11,8 @@ class CustomScaffold extends StatelessWidget {
   final Widget? floatingActionButton;
   final Widget? bottomSheet;
   final String screenName;
+  final bool showBottomNavigation;
+  final bool showAppBar;
   final Function? onWillPop,
       gestureDetectorOnTap,
       gestureDetectorOnPanDown,
@@ -30,6 +32,8 @@ class CustomScaffold extends StatelessWidget {
     this.gestureDetectorOnTap,
     this.onDrawerBtnPressed,
     this.onNotificationListener,
+    this.showBottomNavigation = true,
+    this.showAppBar = true,
   });
 
   @override
@@ -76,66 +80,8 @@ class CustomScaffold extends StatelessWidget {
             extendBody: true,
             appBar: screenName == 'Volunteer Registration Screen'
                 ? null
-                : screenName == 'Chat Screen'
-                    ? PreferredSize(
-                        preferredSize: const Size.fromHeight(100),
-                        child: Container(
-                          color: AppColors.secondary,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 15,
-                                  right: 15,
-                                  top: 50,
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        const CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: AssetImage(
-                                            AppAssets.personImage2,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Admin@gmail.com',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.primary,
-                                              ),
-                                            ),
-                                            const Text(
-                                              'Online/Offline',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : AppBar(
+                : showAppBar
+                    ? AppBar(
                         backgroundColor: AppColors.primary.withOpacity(0.07),
                         bottomOpacity: 0.0,
                         elevation: 0.0,
@@ -156,13 +102,16 @@ class CustomScaffold extends StatelessWidget {
                             size: 30,
                           ),
                         ),
-                      ),
+                      )
+                    : null,
             body: body,
             bottomNavigationBar:
                 screenName == 'Volunteer Registration Screen' ||
                         screenName == 'Chat Screen'
                     ? null
-                    : CustomBottomNavBar(),
+                    : showBottomNavigation
+                        ? CustomBottomNavBar()
+                        : null,
             drawer: screenName == 'Volunteer Registration Screen'
                 ? null
                 : CustomNavigationDrawer(),

@@ -33,5 +33,7 @@ class UserModel {
     return data;
   }
 
-  bool isAdmin() => role == Role.admin;
+  bool isAdmin() {
+    return role == Role.admin;
+  }
 }

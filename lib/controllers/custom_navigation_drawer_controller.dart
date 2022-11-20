@@ -13,9 +13,11 @@ class CustomNavigationDrawerController extends GetxController {
 
   void onDrawerItemTap({required String screenName}) async {
     if (screenName == 'Chat Box') {
+      Get.toNamed(AppRoutes.userList);
       // if (authService.user!.isAdmin()) {
+      //   Get.toNamed(AppRoutes.userList);
       // } else {
-      Get.toNamed(AppRoutes.chatScreen);
+      //   Get.toNamed(AppRoutes.chatScreen);
       // }
     } else if (screenName == 'Log Out') {
       await logout();

@@ -33,14 +33,14 @@ class CustomNavigationDrawer extends StatelessWidget {
                       ),
                       CustomText(
                         textAlign: TextAlign.center,
-                        text: 'Name xyz',
+                        text: controller.authService.user!.name!,
                         color: AppColors.primary,
                         weight: FontWeight.w700,
                       ),
-                      const Expanded(
+                      Expanded(
                         child: CustomText(
                           textAlign: TextAlign.center,
-                          text: 'Email@gmail.com',
+                          text: controller.authService.user!.email!,
                         ),
                       ),
                     ],
