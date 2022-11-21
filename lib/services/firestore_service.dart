@@ -4,9 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/user_model.dart';
 import '../utils/ui_utils.dart';
+import 'locator.dart';
+import 'messaging_service.dart';
 
 class FirestoreService {
   final _db = FirebaseFirestore.instance;
+  final _messaging = locator<MessagingService>();
 
   Future<bool> saveUserData(UserModel user) async {
     try {
@@ -32,6 +35,13 @@ class FirestoreService {
       UiUtils.showPendingToast('Unknown error, please try again!');
       return null;
     }
+  }
+
+  Future<void> updateToken(String uid) async {
+    final token = await _messaging.getToken();
+    await _db.collection('Users').doc(uid).update({
+      'token': token,
+    });
   }
 
   Future<List<String>> getAdminUids() async {
