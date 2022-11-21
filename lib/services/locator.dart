@@ -8,8 +8,8 @@ import 'messaging_service.dart';
 final locator = GetIt.instance;
 
 void init() {
+  locator.registerSingleton<MessagingService>(MessagingService());
   locator.registerSingleton<FirestoreService>(FirestoreService());
   locator.registerSingleton<ChatService>(ChatService());
   locator.registerSingleton<AuthService>(AuthService());
-  locator.registerSingleton<MessagingService>(MessagingService());
 }

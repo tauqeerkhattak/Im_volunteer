@@ -16,7 +16,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   init();
-  locator.get<MessagingService>().initMessaging();
+  await locator.get<MessagingService>().initMessaging();
   runApp(const IAmVolunteer());
 }
 
