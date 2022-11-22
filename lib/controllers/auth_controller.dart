@@ -62,9 +62,6 @@ class AuthController extends GetxController {
       );
       if (isUserCreated) {
         loading.value = false;
-        UiUtils.showPendingToast(
-          'Account is pending verification\n Please wait till the verification complete.',
-        );
         Get.toNamed(
           AppRoutes.homeScreen,
         );
@@ -111,5 +108,7 @@ class AuthController extends GetxController {
       }
 
     }
+    // Get.offAllNamed(AppRoutes.homeScreen);
+
   }
 }

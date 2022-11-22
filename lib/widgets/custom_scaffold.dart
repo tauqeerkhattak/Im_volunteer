@@ -139,12 +139,12 @@ class CustomScaffold extends StatelessWidget {
                         backgroundColor: AppColors.primary.withOpacity(0.07),
                         bottomOpacity: 0.0,
                         elevation: 0.0,
-                        title: Center(
-                          child: Image.asset(
-                            AppAssets.logo,
-                            height: 60,
-                          ),
-                        ),
+                        // title: Center(
+                        //   child: Image.asset(
+                        //     AppAssets.logo,
+                        //     height: 60,
+                        //   ),
+                        // ),
                         leading: GestureDetector(
                           onTap: () {
                             scaffoldKey.currentState!.openDrawer();
