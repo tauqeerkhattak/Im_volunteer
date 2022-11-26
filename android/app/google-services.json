@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "814778856446",
-    "project_id": "im-volunteer-9fd50",
-    "storage_bucket": "im-volunteer-9fd50.appspot.com"
+    "project_number": "840923796993",
+    "project_id": "im-volunteer-fe16c",
+    "storage_bucket": "im-volunteer-fe16c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:814778856446:android:217bbdb382c05cfd2706af",
+        "mobilesdk_app_id": "1:840923796993:android:2102975e0a752861229200",
         "android_client_info": {
           "package_name": "com.mania.i_am_volunteer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "814778856446-3p12sinh3n8q92bfa6bs2jno1jtnoqma.apps.googleusercontent.com",
+          "client_id": "840923796993-8svfg8o665o6hikagf4efta0e7bfv57v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mania.i_am_volunteer",
+            "certificate_hash": "59583e9ba58ae2cebfd1d0f863417abccb1933e4"
+          }
+        },
+        {
+          "client_id": "840923796993-iguud4evpaqtv8ehp3j2ktl80jj7o5aj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZwgMfzaCI2Jvbnfj0HMjsgNHV08nYEks"
+          "current_key": "AIzaSyAFgN2b3Ta3-1U83Z58I18MVTZZj8yeDY8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "814778856446-3p12sinh3n8q92bfa6bs2jno1jtnoqma.apps.googleusercontent.com",
+              "client_id": "840923796993-iguud4evpaqtv8ehp3j2ktl80jj7o5aj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

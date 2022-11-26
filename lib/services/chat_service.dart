@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/services/locator.dart';
 
@@ -12,6 +13,7 @@ import 'firestore_service.dart';
 class ChatService {
   final _db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
+  final _messaging = FirebaseMessaging.instance;
   final firestoreService = locator.get<FirestoreService>();
 
   Stream<List<ChatItem>> chatStreams(String chatID) async* {
@@ -29,9 +31,9 @@ class ChatService {
   }
 
   Future<void> sendChat(String message, String chatId) async {
-    List<String> adminUids = await firestoreService.getAdminUids();
+    // List<String> adminUids = await firestoreService.getAdminUids();
     final currentUid = _auth.currentUser!.uid;
-    adminUids.addIf(!adminUids.contains(currentUid), currentUid);
+    // adminUids.addIf(!adminUids.contains(currentUid), currentUid);
     await _db.collection('chats').doc(chatId).collection('messages').add({
       'sentBy': currentUid,
       'message': message,

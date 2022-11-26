@@ -134,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: user.isAdmin() ? 'ADMIN' : user.name!,
+                      text: user.isAdmin() ? user.name! : 'ADMIN',
                       fontSize: 18,
                       weight: FontWeight.bold,
                       color: AppColors.primary,

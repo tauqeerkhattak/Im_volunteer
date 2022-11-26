@@ -45,20 +45,20 @@ class HomeScreen extends StatelessWidget {
           // ),
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Users')
+                  .collection('users')
                   .where("role", isEqualTo: "admin")
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return const Text("Loading");
                 }
                 if (snapshot.data!.size == 0) {
-                  return Center(child: Text("There is no Lead"));
+                  return const Center(child: Text("There is no Lead"));
                 }
                 return SizedBox(
                   height: 120,
@@ -86,14 +86,14 @@ class HomeScreen extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return const Text("Loading");
                 }
                 if (snapshot.data!.size == 0) {
-                  return Center(child: Text("There is no Lead"));
+                  return const Center(child: Text("There is no Lead"));
                 }
                 return Expanded(
                     child: ListView(

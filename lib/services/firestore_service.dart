@@ -13,7 +13,7 @@ class FirestoreService {
 
   Future<bool> saveUserData(UserModel user) async {
     try {
-      await _db.collection('Users').doc(user.uid).set(user.toJson());
+      await _db.collection('users').doc(user.uid).set(user.toJson());
       return true;
     } catch (e) {
       log('ERROR: $e');
@@ -24,7 +24,7 @@ class FirestoreService {
 
   Future<UserModel?> getUserData(String uid) async {
     try {
-      final userDoc = await _db.collection('Users').doc(uid).get();
+      final userDoc = await _db.collection('users').doc(uid).get();
       if (userDoc.data() != null) {
         UserModel user = UserModel.fromJson(userDoc.data()!);
         return user;
@@ -39,14 +39,14 @@ class FirestoreService {
 
   Future<void> updateToken(String uid) async {
     final token = await _messaging.getToken();
-    await _db.collection('Users').doc(uid).update({
+    await _db.collection('users').doc(uid).update({
       'token': token,
     });
   }
 
   Future<List<String>> getAdminUids() async {
     final docs = await _db
-        .collection('Users')
+        .collection('users')
         .where('role', isEqualTo: Role.admin.name)
         .get();
     List<String> uids = List.generate(docs.size, (index) {
@@ -57,13 +57,13 @@ class FirestoreService {
   }
 
   Future<UserModel> getUserByUid(String uid) async {
-    final userDoc = await _db.collection('Users').doc(uid).get();
+    final userDoc = await _db.collection('users').doc(uid).get();
     final user = UserModel.fromJson(userDoc.data()!);
     return user;
   }
 
   Future<String> getNameById(String uid) async {
-    final userDoc = await _db.collection('Users').doc(uid).get();
+    final userDoc = await _db.collection('users').doc(uid).get();
     final user = UserModel.fromJson(userDoc.data()!);
     return user.name!;
   }

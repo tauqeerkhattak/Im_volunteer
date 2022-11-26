@@ -26,6 +26,7 @@ class AuthService {
         final isSaved = await _dbService.saveUserData(
           user,
         );
+        this.user = await _dbService.getUserData(credentials.user!.uid);
         return isSaved;
       }
       return false;
