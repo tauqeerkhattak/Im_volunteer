@@ -62,6 +62,9 @@ class AuthController extends GetxController {
       );
       if (isUserCreated) {
         loading.value = false;
+        UiUtils.showPendingToast(
+          'Account is pending verification\n Please wait till the verification complete.',
+        );
         Get.toNamed(
           AppRoutes.homeScreen,
         );
@@ -74,7 +77,7 @@ class AuthController extends GetxController {
     //     email: controller.emailController.text,
     //     password: controller.passwordController.text);
     // DocumentReference ref = FirebaseFirestore.instance
-    //     .collection('users')
+    //     .collection('Users')
     //     .doc(FirebaseAuth.instance.currentUser!.uid);
     // await ref.set({
     //   'docId': ref.id,
@@ -106,9 +109,6 @@ class AuthController extends GetxController {
       } else {
         loading.value = false;
       }
-
     }
-    // Get.offAllNamed(AppRoutes.homeScreen);
-
   }
 }

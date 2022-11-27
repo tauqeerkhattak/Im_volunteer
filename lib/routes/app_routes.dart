@@ -9,12 +9,14 @@ import 'package:i_am_volunteer/ui/home/volunteer_registration_screen.dart';
 import 'package:i_am_volunteer/ui/notification/notification_screen.dart';
 import 'package:i_am_volunteer/ui/paid_volunteer/paid_volunteer_screen.dart';
 
+import '../bindings/chat_bindings.dart';
 import '../bindings/screen_binding.dart';
 import '../ui/account/account_screen.dart';
 import '../ui/auth/auth_dashboard.dart';
 import '../ui/auth/login.dart';
 import '../ui/auth/register.dart';
 import '../ui/auth/splash.dart';
+import '../ui/chat/user_list.dart';
 
 class AppRoutes {
   static String splash = '/';
@@ -30,9 +32,9 @@ class AppRoutes {
   static String userProfileScreen = '/user_profile_screen';
   static String volunteerProfileScreen = '/volunteer_profile_screen';
   static String chatScreen = '/chat_screen';
+  static String userList = '/user_list';
   static String kBottomNavigationController = "/BOTTOM_NAVBAR_Controller";
   static String eventDetails = '/event_details';
-
 
   static List<GetPage> pages = [
     GetPage(
@@ -56,54 +58,60 @@ class AppRoutes {
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:homeScreen,
+      name: homeScreen,
       page: () => HomeScreen(),
-      binding: ScreenBinding(),
+      bindings: [
+        ChatBindings(),
+        ScreenBinding(),
+      ],
     ),
     GetPage(
-      name:eventDetails,
+      name: eventDetails,
       page: () => EventDetails(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:calenderScreen,
+      name: calenderScreen,
       page: () => CalenderScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:notificationScreen,
+      name: notificationScreen,
       page: () => NotificationScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:paidVolunteerScreen,
+      name: paidVolunteerScreen,
       page: () => PaidVolunteerScreen(),
       binding: ScreenBinding(),
     ),
-    GetPage(
+   GetPage(
       name:accountScreen,
       page: () => UserProfileScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:volunteerRegistrationScreen,
+      name: volunteerRegistrationScreen,
       page: () => VolunteerRegistrationScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:userProfileScreen,
+      name: userProfileScreen,
       page: () => UserProfileScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:volunteerProfileScreen,
+      name: volunteerProfileScreen,
       page: () => VolunteerProfileScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(
-      name:chatScreen,
-      page: () => ChatScreen(),
-      binding: ScreenBinding(),
+      name: chatScreen,
+      page: () => const ChatScreen(),
+    ),
+    GetPage(
+      name: userList,
+      page: () => UserList(),
     ),
   ];
 }

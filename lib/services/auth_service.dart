@@ -26,6 +26,7 @@ class AuthService {
         final isSaved = await _dbService.saveUserData(
           user,
         );
+        this.user = await _dbService.getUserData(credentials.user!.uid);
         return isSaved;
       }
       return false;
@@ -57,6 +58,7 @@ class AuthService {
         password: password,
       );
       if (credentials.user != null) {
+        await _dbService.updateToken(credentials.user!.uid);
         final user = await _dbService.getUserData(credentials.user!.uid);
         this.user = user;
         return true;

@@ -41,7 +41,7 @@ class UiUtils {
   }
 
   static final loader = Center(
-    child: CircularProgressIndicator(
+    child: CircularProgressIndicator.adaptive(
       valueColor: AlwaysStoppedAnimation(
         AppColors.primary,
       ),

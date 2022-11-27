@@ -5,12 +5,13 @@ import 'package:i_am_volunteer/controllers/home_controller.dart';
 import 'package:i_am_volunteer/routes/app_routes.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 
-import '../../utils/app_assets.dart';
+import '../../controllers/chat_screen_controller.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/custom_scaffold.dart';
 
 class HomeScreen extends StatelessWidget {
   final controller = Get.find<HomeScreenController>();
+  final chatController = Get.find<ChatScreenController>();
   HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -50,14 +51,14 @@ class HomeScreen extends StatelessWidget {
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return const Text("Loading");
                 }
                 if (snapshot.data!.size == 0) {
-                  return Center(child: Text("There is no Lead"));
+                  return const Center(child: Text("There is no Lead"));
                 }
                 return SizedBox(
                   height: 120,
@@ -66,10 +67,10 @@ class HomeScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       // itemCount: snapshot.data!.docs.length,
                       // itemBuilder: ((context, index) {
-                      children: snapshot.data!.docs
-                          .map((DocumentSnapshot document) {
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
                         Map<String, dynamic> data =
-                        document.data()! as Map<String, dynamic>;
+                            document.data()! as Map<String, dynamic>;
                         return statusWidget(
                             image: data['profile'], text: '${data['name']}');
                       }).toList()),
@@ -81,18 +82,18 @@ class HomeScreen extends StatelessWidget {
 
           StreamBuilder<QuerySnapshot>(
               stream:
-              FirebaseFirestore.instance.collection('events').snapshots(),
+                  FirebaseFirestore.instance.collection('Events').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
-                  return Text('Something went wrong');
+                  return const Text('Something went wrong');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Text("Loading");
+                  return const Text("Loading");
                 }
                 if (snapshot.data!.size == 0) {
-                  return Center(child: Text("There is no Lead"));
+                  return const Center(child: Text("There is no Lead"));
                 }
                 return Expanded(
                     child: ListView(
@@ -102,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                         children: snapshot.data!.docs
                             .map((DocumentSnapshot document) {
                           Map<String, dynamic> data =
-                          document.data()! as Map<String, dynamic>;
+                              document.data()! as Map<String, dynamic>;
                           // print(Text(data['name']));
                           // print("${base64Decode(data['image3'])}");
                           // return LeadgenerationScreen(
@@ -122,8 +123,7 @@ class HomeScreen extends StatelessWidget {
                               image: data['image'],
                               name: data['adminName'],
                               profileImage: data['adminImage'],
-                              openEvent: data['openEvent']
-                          );
+                              openEvent: data['openEvent']);
                         }).toList()));
                 //     return Text('nodata');
                 //   }),
@@ -161,10 +161,10 @@ class HomeScreen extends StatelessWidget {
 
   Widget postWidget(
       {required String title,
-        required String image,
-        required String name,
-        required String profileImage,
-        required bool openEvent}) {
+      required String image,
+      required String name,
+      required String profileImage,
+      required bool openEvent}) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Container(
@@ -186,16 +186,16 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText(
-                          text: name,
-                          color: AppColors.primary,
-                          weight: FontWeight.w600,
-                        ),
-                        CustomText(text: title)
-                      ],
-                    )),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: name,
+                      color: AppColors.primary,
+                      weight: FontWeight.w600,
+                    ),
+                    CustomText(text: title)
+                  ],
+                )),
                 const Icon(Icons.more_vert),
               ],
             ),
@@ -227,7 +227,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget postImage(String image) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         Get.toNamed(AppRoutes.eventDetails);
       },
       child: Container(
@@ -250,24 +250,25 @@ class HomeScreen extends StatelessWidget {
         const Spacer(),
         isEventOpen
             ? GestureDetector(
-          onTap: () {
-            controller.onApplyVolunteer();
-          },
-          child: Container(
-            height: 40,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                    color: AppColors.primary.withOpacity(0.4), width: 2)),
-            child: const CustomText(
-              text: 'Apply For Volunteer',
-              weight: FontWeight.w600,
-            ),
-          ),
-        )
+                onTap: () {
+                  controller.onApplyVolunteer();
+                },
+                child: Container(
+                  height: 40,
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                          color: AppColors.primary.withOpacity(0.4), width: 2)),
+                  child: const CustomText(
+                    text: 'Apply For Volunteer',
+                    weight: FontWeight.w600,
+                  ),
+                ),
+              )
             : const SizedBox()
       ],
     );
   }
 }
+

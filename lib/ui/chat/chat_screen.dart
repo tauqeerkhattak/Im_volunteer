@@ -1,20 +1,37 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/chat_screen_controller.dart';
 import 'package:i_am_volunteer/extensions/date_time_extension.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 
+import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/ui_utils.dart';
 import '../../widgets/custom_scaffold.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
   final controller = Get.find<ChatScreenController>();
-  ChatScreen({super.key});
+  final chatID = Get.arguments['chatID'];
+
+  @override
+  void initState() {
+    super.initState();
+    controller.subscribeForMessages(chatID);
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      showAppBar: false,
       body: _getBody(),
       onWillPop: controller.onBack,
       scaffoldKey: controller.scaffoldKey,
@@ -24,48 +41,61 @@ class ChatScreen extends StatelessWidget {
 
   Widget _getBody() {
     return Obx(() {
-      if (controller.loading.value) {
+      if (controller.chatLoading.value) {
         return UiUtils.loader;
       } else {
         return SizedBox(
           height: Get.height,
           child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 80),
-                child: Obx(
-                  () {
-                    if (controller.messages.value.isEmpty) {
-                      return const Center(
-                        child: CustomText(
-                          text: 'No Messages!\n Be the first one to say Hi!',
-                        ),
-                      );
-                    } else {
-                      return ListView.builder(
-                        controller: controller.scrollController,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: controller.messages.value.length,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          final chatItem = controller.messages.value[index];
-                          if (chatItem.sentBy ==
-                              controller.authService.user?.uid) {
-                            return senderMessage(
-                              senderMessage: chatItem.message!,
-                              time: chatItem.time,
+              Column(
+                children: [
+                  _chatName(),
+                  Expanded(
+                    flex: 9,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 80),
+                      child: Obx(
+                        () {
+                          if (controller.messages.value.isEmpty) {
+                            return const Center(
+                              child: CustomText(
+                                text:
+                                    'No Messages!\n Be the first one to say Hi!',
+                                textAlign: TextAlign.center,
+                              ),
                             );
                           } else {
-                            return recipientMessage(
-                              recipientMessage: chatItem.message!,
-                              time: chatItem.time,
+                            log('LENGTH: ${controller.messages.value.length}');
+                            return ListView.builder(
+                              controller: controller.scrollController,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: controller.messages.value.length,
+                              reverse: true,
+                              itemBuilder: (context, index) {
+                                final chatItem =
+                                    controller.messages.value[index];
+                                if (chatItem.sentBy ==
+                                    controller.authService.user?.uid) {
+                                  return senderMessage(
+                                    senderMessage: chatItem.message!,
+                                    time: chatItem.time,
+                                  );
+                                } else {
+                                  return recipientMessage(
+                                    recipientMessage: chatItem.message!,
+                                    time: chatItem.time,
+                                  );
+                                }
+                              },
                             );
                           }
                         },
-                      );
-                    }
-                  },
-                ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               widgetTypeMessage(),
             ],
@@ -73,6 +103,55 @@ class ChatScreen extends StatelessWidget {
         );
       }
     });
+  }
+
+  Widget _chatName() {
+    final user = controller.authService.user!;
+    return SafeArea(
+      child: Container(
+        color: AppColors.secondary,
+        padding: const EdgeInsets.symmetric(
+          vertical: 20,
+          horizontal: 10,
+        ),
+        child: Row(
+          children: [
+            const SizedBox(
+              width: 10,
+            ),
+            Row(
+              children: [
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundImage: AssetImage(
+                    AppAssets.personImage2,
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      text: user.isAdmin() ? user.name! : 'ADMIN',
+                      fontSize: 18,
+                      weight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
+                    const CustomText(
+                      text: 'Online/Offline',
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget widgetTypeMessage() {
@@ -124,7 +203,7 @@ class ChatScreen extends StatelessWidget {
                   ),
                 ),
                 RawMaterialButton(
-                  onPressed: controller.sendText,
+                  onPressed: () => controller.sendText(chatID),
                   constraints: const BoxConstraints(),
                   elevation: 3.0,
                   fillColor: Colors.grey[300],
