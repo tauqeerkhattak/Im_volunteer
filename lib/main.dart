@@ -6,6 +6,7 @@ import 'package:i_am_volunteer/services/locator.dart';
 
 import 'routes/app_routes.dart';
 import 'services/messaging_service.dart';
+import 'services/notification_service.dart';
 
 Future<void> onBackgroundMessage(RemoteMessage remoteMessage) async {
   print(
@@ -16,6 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   init();
+  await locator.get<NotificationService>().initNotifications();
   await locator.get<MessagingService>().initMessaging();
   runApp(const IAmVolunteer());
 }
