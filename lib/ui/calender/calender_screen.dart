@@ -67,7 +67,7 @@ class CalenderScreen extends StatelessWidget{
                         return InkWell(
                           onTap: (){
                             // var event = FirebaseFirestore.instance
-                            //     .collection('Users')
+                            //     .collection('users')
                             //     .where("role", isEqualTo: "admin").snapshots();
                             // print(event.first);
                             Get.to(()=>DayEvents(),arguments: selectedDT);

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/routes/app_routes.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/auth_service.dart';
 import '../services/locator.dart';
@@ -24,9 +25,11 @@ class CustomNavigationDrawerController extends GetxController {
 
   Future<void> logout() async {
     final isLoggedOut = await authService.logout();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (isLoggedOut) {
       log('LoggedOut!');
       await messaging.deleteToken();
+      prefs.clear();
       Get.offAllNamed(AppRoutes.login);
     }
   }

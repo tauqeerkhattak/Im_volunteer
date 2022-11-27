@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/paid_volunteer_screen_controller.dart';
@@ -19,38 +20,92 @@ class PaidVolunteerScreen extends StatelessWidget{
       screenName: 'Paid Volunteer Screen',);
   }
   Widget _getBody(){
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 60),
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  statusWidget(image: AppAssets.personImage1, text: 'Dr. ABCD'),
-                  statusWidget(image: AppAssets.personImage2, text: 'Dr. CDEF'),
-                  statusWidget(image: AppAssets.personImage3, text: 'Dr. IJKL'),
-                  statusWidget(image: AppAssets.personImage1, text: 'Dr. ABCDEF'),
-                  statusWidget(image: AppAssets.personImage2, text: 'Dr. CDEFGHI'),
-                  statusWidget(image: AppAssets.personImage3, text: 'Dr. IJKLMNO'),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 60),
+      child: Column(
+        children: [
+          Center(
+            child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('paidVolunteers')
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
 
-                ],
-              ),
-            ),
-            informationCard(profileImage: AppAssets.personImage2, name: 'Dr.cde', profession: 'Musician', experience: '3 Years', contactNum: '+92 1234567890',price: '2000'),
-            informationCard(profileImage: AppAssets.personImage3, name: 'Dr.abd', profession: 'Software Engineer', experience: '4 Years', contactNum: '+92 1234566590',price: '3000'),
-            informationCard(profileImage: AppAssets.personImage1, name: 'Dr.akl', profession: 'Singer', experience: '1 Years', contactNum: '+92 321566590',price: '40000'),
-          ],
-        ),
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
+                  if (snapshot.data!.size == 0) {
+                    return Center(child: Text("There is no Lead"));
+                  }
+                  return SizedBox(
+                    height: 120,
+                    child: ListView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        // itemCount: snapshot.data!.docs.length,
+                        // itemBuilder: ((context, index) {
+                        children: snapshot.data!.docs
+                            .map((DocumentSnapshot document) {
+                          Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                          return statusWidget(
+                              image: data['image'], text: '${data['name']}');
+                        }).toList()),
+                  );
+                  //     return Text('nodata');
+                  //   }),
+                  // );
+                }),
+          ),
+          StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('paidVolunteers')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
+                if (snapshot.data!.size == 0) {
+                  return Center(child: Text("There is no Lead"));
+                }
+                return Expanded(
+                  // height: 120,
+                  child: ListView(
+                      shrinkWrap: true,
+                      // physics: ,
+                      // scrollDirection: Axis.vertical,
+                      // itemCount: snapshot.data!.docs.length,
+                      // itemBuilder: ((context, index) {
+                      children: snapshot.data!.docs
+                          .map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                        document.data()! as Map<String, dynamic>;
+                        return             informationCard(profileImage: data['image'].toString(), name: data['name'].toString(), profession: data['profession'].toString(), experience: '${data['experience']} Years', contactNum: '+${data['contactNo']}',price: data['price'].toString());
+                      }).toList()),
+                );
+                //     return Text('nodata');
+                //   }),
+                // );
+              }),
+
+          // informationCard(profileImage: AppAssets.personImage2, name: 'Dr.cde', profession: 'Musician', experience: '3 Years', contactNum: '+92 1234567890',price: '2000'),
+          // informationCard(profileImage: AppAssets.personImage3, name: 'Dr.abd', profession: 'Software Engineer', experience: '4 Years', contactNum: '+92 1234566590',price: '3000'),
+          // informationCard(profileImage: AppAssets.personImage1, name: 'Dr.akl', profession: 'Singer', experience: '1 Years', contactNum: '+92 321566590',price: '40000'),
+        ],
       ),
     );
   }
 
-  Widget statusWidget({required String image, required String text}){
+  Widget statusWidget({required String image, required String text}) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -58,13 +113,14 @@ class PaidVolunteerScreen extends StatelessWidget{
         children: [
           CircleAvatar(
             radius: 35,
-            backgroundColor:  AppColors.primary.withOpacity(0.4),
-            child: CircleAvatar(
-              radius: 32,
-              backgroundImage: AssetImage(image),
-            ),
+            backgroundColor: AppColors.primary.withOpacity(0.4),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(35),
+                child: Image.network(image, fit: BoxFit.cover)),
           ),
-          const SizedBox(height: 7,),
+          const SizedBox(
+            height: 7,
+          ),
           CustomText(text: text),
         ],
       ),
@@ -117,12 +173,20 @@ class PaidVolunteerScreen extends StatelessWidget{
     );
   }
 
-  Widget profileImageWidget({required String image}){
+  Widget profileImageWidget({required String image}) {
     return CircleAvatar(
-      radius: 35,
-      backgroundImage: AssetImage(image),
+      radius: 22,
+      backgroundColor: AppColors.primary.withOpacity(0.4),
+      // child: CircleAvatar(
+      //   radius: 20,
+      //   child: Image.network(image),
+      // ),
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Image.network(image, fit: BoxFit.cover)),
     );
   }
+
   Widget profileInformation(
       {required String profession, required String experience, required String contactNum}){
     return Padding(

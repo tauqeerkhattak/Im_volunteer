@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
           // ),
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Users')
+                  .collection('users')
                   .where("role", isEqualTo: "admin")
                   .snapshots(),
               builder: (BuildContext context,
@@ -81,7 +81,7 @@ class HomeScreen extends StatelessWidget {
 
           StreamBuilder<QuerySnapshot>(
               stream:
-              FirebaseFirestore.instance.collection('Events').snapshots(),
+              FirebaseFirestore.instance.collection('events').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {

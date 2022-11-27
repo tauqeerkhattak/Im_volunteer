@@ -29,7 +29,7 @@ class EventDetails extends StatelessWidget {
         children: [
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Users')
+                  .collection('users')
                   .where("role", isEqualTo: "admin")
                   .snapshots(),
               builder: (BuildContext context,

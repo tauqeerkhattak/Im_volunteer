@@ -74,7 +74,7 @@ class AuthController extends GetxController {
     //     email: controller.emailController.text,
     //     password: controller.passwordController.text);
     // DocumentReference ref = FirebaseFirestore.instance
-    //     .collection('Users')
+    //     .collection('users')
     //     .doc(FirebaseAuth.instance.currentUser!.uid);
     // await ref.set({
     //   'docId': ref.id,

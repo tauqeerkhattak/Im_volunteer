@@ -30,10 +30,10 @@ class CalenderScreenController extends GetxController{
     kFirstDay= DateTime(kToday.year, kToday.month - 3, kToday.day);
     kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
     int selectedDT=kLastDay.millisecondsSinceEpoch;
-    FirebaseFirestore.instance.collection('Events').doc("KnFFEzrcBqWiy5R6yaYb").update({
+    FirebaseFirestore.instance.collection('events').doc("r8mwOsRXZxpBRYVBCYOb").update({
       'date': selectedDT
     });
-    FirebaseFirestore.instance.collection('Events').doc("O14vbI6z9DaNjB1Qm7ds").update({
+    FirebaseFirestore.instance.collection('events').doc("O14vbI6z9DaNjB1Qm7ds").update({
       'date': kFirstDay.microsecondsSinceEpoch
     });
     var k = DateTime.fromMillisecondsSinceEpoch(selectedDT);

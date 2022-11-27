@@ -82,7 +82,7 @@ class AppRoutes {
     ),
     GetPage(
       name:accountScreen,
-      page: () => AccountScreen(),
+      page: () => UserProfileScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(

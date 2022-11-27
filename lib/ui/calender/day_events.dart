@@ -30,7 +30,7 @@ class DayEvents extends StatelessWidget {
 
           StreamBuilder<QuerySnapshot>(
               stream:
-              FirebaseFirestore.instance.collection('Events').where('date',isEqualTo: data).snapshots(),
+              FirebaseFirestore.instance.collection('events').where('date',isEqualTo: data).snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
