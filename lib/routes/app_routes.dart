@@ -85,9 +85,9 @@ class AppRoutes {
       page: () => PaidVolunteerScreen(),
       binding: ScreenBinding(),
     ),
-    GetPage(
-      name: accountScreen,
-      page: () => AccountScreen(),
+   GetPage(
+      name:accountScreen,
+      page: () => UserProfileScreen(),
       binding: ScreenBinding(),
     ),
     GetPage(

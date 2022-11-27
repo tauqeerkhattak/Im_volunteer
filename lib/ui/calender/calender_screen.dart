@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,7 +68,7 @@ class CalenderScreen extends StatelessWidget{
                         return InkWell(
                           onTap: (){
                             // var event = FirebaseFirestore.instance
-                            //     .collection('Users')
+                            //     .collection('users')
                             //     .where("role", isEqualTo: "admin").snapshots();
                             // print(event.first);
                             Get.to(()=>DayEvents(),arguments: selectedDT);

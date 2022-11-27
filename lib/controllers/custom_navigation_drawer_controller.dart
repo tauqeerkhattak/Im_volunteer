@@ -36,3 +36,4 @@ class CustomNavigationDrawerController extends GetxController {
     }
   }
 }
+

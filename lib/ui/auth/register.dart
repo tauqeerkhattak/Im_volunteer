@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/auth_controller.dart';
@@ -24,6 +25,7 @@ class Register extends StatelessWidget {
         child: Column(
           children: [
             _topIllustration(),
+            SizedBox(height: 20,),
             Expanded(
               child: _body(),
             ),
@@ -37,7 +39,7 @@ class Register extends StatelessWidget {
     return CustomPaint(
       painter: RegisterPainter(),
       child: SizedBox(
-        height: Get.height * 0.3,
+        height: Get.height * 0.2,
         child: Column(
           children: [
             UiUtils.vertSpace20,
@@ -46,12 +48,15 @@ class Register extends StatelessWidget {
               children: [
                 Expanded(
                   child: Center(
-                    child: CustomText(
-                      text: 'Create\nAccount',
-                      color: AppColors.primary,
-                      weight: FontWeight.w700,
-                      fontSize: 36,
-                      enableShadow: true,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: CustomText(
+                        text: 'Create\nAccount',
+                        color: AppColors.primary,
+                        weight: FontWeight.w700,
+                        fontSize: 36,
+                        // enableShadow: true,
+                      ),
                     ),
                   ),
                 ),
@@ -70,107 +75,110 @@ class Register extends StatelessWidget {
   }
 
   Widget _body() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Form(
-        key: controller.registerFormKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InputField(
-              paddingVertical: 10,
-              controller: controller.nameController,
-              hint: 'NAME',
-              suffixIcon: Icons.person,
-              validator: stringValidator,
-            ),
-            InputField(
-              paddingVertical: 10,
-              controller: controller.emailController,
-              hint: 'EMAIL',
-              suffixIcon: Icons.mail_outline,
-              validator: emailValidator,
-            ),
-            InputField(
-              paddingVertical: 10,
-              controller: controller.passwordController,
-              hint: 'PASSWORD',
-              suffixIcon: Icons.remove_red_eye_outlined,
-              hideText: true,
-              validator: passwordValidator,
-            ),
-            // iAmNotRobotContainer(),
-            UiUtils.vertSpace20,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Obx(
-                    () => controller.loading.value
-                        ? UiUtils.loader
-                        : StyledButton(
-                            onTap: controller.signUp,
-                            label: 'Sign Up',
-                          ),
-                  ),
-                ],
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Form(
+          key: controller.registerFormKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InputField(
+                paddingVertical: 10,
+                controller: controller.nameController,
+                hint: 'NAME',
+                suffixIcon: Icons.person,
+                validator: stringValidator,
               ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: AppColors.heading.withOpacity(0.1),
-                        ),
-                      ),
-                      CustomText(
-                        text: '  Or sign in with   ',
-                        color: AppColors.heading.withOpacity(0.5),
-                      ),
-                      Expanded(
-                        child: Container(
-                          height: 1,
-                          color: AppColors.heading.withOpacity(0.1),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.heading.withOpacity(0.1),
-                          )
-                        ]),
-                    child: Center(
-                      child: Image.asset(
-                        AppAssets.googleIcon,
-                        height: 30,
-                      ),
+              InputField(
+                paddingVertical: 10,
+                controller: controller.emailController,
+                hint: 'EMAIL',
+                suffixIcon: Icons.mail_outline,
+                validator: emailValidator,
+              ),
+              InputField(
+                paddingVertical: 10,
+                controller: controller.passwordController,
+                hint: 'PASSWORD',
+                suffixIcon: Icons.remove_red_eye_outlined,
+                hideText: true,
+                validator: passwordValidator,
+              ),
+              // iAmNotRobotContainer(),
+              UiUtils.vertSpace20,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Obx(
+                      () => controller.loading.value
+                          ? UiUtils.loader
+                          : StyledButton(
+                              onTap: controller.signUp,
+                              label: 'Sign Up',
+                            ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-            customTextWidget(),
-          ],
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: AppColors.heading.withOpacity(0.1),
+                          ),
+                        ),
+                        CustomText(
+                          text: '  OR  ',
+                          color: AppColors.heading.withOpacity(0.5),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 1,
+                            color: AppColors.heading.withOpacity(0.1),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // Container(
+                    //   height: 50,
+                    //   width: 50,
+                    //   decoration: BoxDecoration(
+                    //       color: AppColors.white,
+                    //       borderRadius: BorderRadius.circular(10),
+                    //       boxShadow: [
+                    //         BoxShadow(
+                    //           color: AppColors.heading.withOpacity(0.1),
+                    //         )
+                    //       ]),
+                    //   child: Center(
+                    //     child: Image.asset(
+                    //       AppAssets.googleIcon,
+                    //       height: 30,
+                    //     ),
+                    //   ),
+                    // )
+                  ],
+                ),
+              ),
+              customTextWidget(),
+            ],
+          ),
         ),
       ),
     );

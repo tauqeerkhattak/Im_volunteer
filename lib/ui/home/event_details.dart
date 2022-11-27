@@ -1,3 +1,5 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,7 @@ class EventDetails extends StatelessWidget {
         children: [
           StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('Users')
+                  .collection('users')
                   .where("role", isEqualTo: "admin")
                   .snapshots(),
               builder: (BuildContext context,

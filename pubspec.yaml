@@ -1,3 +1,4 @@
+
 name: i_am_volunteer
 description: A new Flutter project.
 
@@ -41,10 +42,12 @@ dependencies:
   firebase_core: ^2.2.0
   firebase_auth: ^4.1.2
   cloud_firestore: ^4.0.5
+  firebase_storage: ^11.0.6
 
   firebase_messaging: ^14.1.0
   flutter_local_notifications: ^12.0.3
 
+  image_picker: ^0.8.6
   google_fonts: ^3.0.1
   bottom_navy_bar: ^6.0.0
   table_calendar: ^3.0.8
