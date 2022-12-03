@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:i_am_volunteer/services/auth_service.dart';
 import 'package:i_am_volunteer/services/locator.dart';
 import 'package:i_am_volunteer/utils/ui_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
 import '../routes/app_routes.dart';
@@ -96,6 +97,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> login() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (loginFormKey.currentState!.validate()) {
       loading.value = true;
       final email = emailController.text.trim();

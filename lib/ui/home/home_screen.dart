@@ -82,7 +82,7 @@ class HomeScreen extends StatelessWidget {
 
           StreamBuilder<QuerySnapshot>(
               stream:
-                  FirebaseFirestore.instance.collection('Events').snapshots(),
+                  FirebaseFirestore.instance.collection('events').snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -249,23 +249,24 @@ class HomeScreen extends StatelessWidget {
         const Icon(Icons.chat_bubble_outline),
         const Spacer(),
         isEventOpen
-            ? GestureDetector(
-                onTap: () {
-                  controller.onApplyVolunteer();
-                },
-                child: Container(
-                  height: 40,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                          color: AppColors.primary.withOpacity(0.4), width: 2)),
-                  child: const CustomText(
-                    text: 'Apply For Volunteer',
-                    weight: FontWeight.w600,
-                  ),
-                ),
-              )
+            ? (controller.indicator?CircularProgressIndicator(color: AppColors.secondary,):GestureDetector(
+          onTap: () {
+            controller.onApplyVolunteer();
+
+          },
+          child: Container(
+            height: 40,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                    color: AppColors.primary.withOpacity(0.4), width: 2)),
+            child: const CustomText(
+              text: 'Apply For Volunteer',
+              weight: FontWeight.w600,
+            ),
+          ),
+        ))
             : const SizedBox()
       ],
     );
