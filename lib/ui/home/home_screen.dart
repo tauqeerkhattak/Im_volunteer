@@ -113,9 +113,12 @@ class HomeScreen extends StatelessWidget {
                         onApplyForVolunteer: () {
                           controller.onApplyVolunteer();
                         },
-                        onCommentTapped: () {
+                        onPostTapped: () {
                           Get.toNamed(
                             AppRoutes.eventDetails,
+                            arguments: {
+                              'event': event,
+                            },
                           );
                         },
                       );

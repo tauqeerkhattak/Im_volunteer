@@ -8,14 +8,16 @@ import 'custom_text.dart';
 
 class EventWidget extends StatelessWidget {
   final EventModel event;
-  final Function() onApplyForVolunteer;
-  final Function() onCommentTapped;
+  final Function()? onApplyForVolunteer;
+  final Function()? onPostTapped;
+  final bool showBottomWidgets;
 
   const EventWidget({
     Key? key,
     required this.event,
-    required this.onApplyForVolunteer,
-    required this.onCommentTapped,
+    this.onApplyForVolunteer,
+    this.onPostTapped,
+    this.showBottomWidgets = true,
   }) : super(key: key);
 
   @override
@@ -71,9 +73,10 @@ class EventWidget extends StatelessWidget {
               event.image!,
             ),
             const SizedBox(height: 7),
-            _bottomWidgetOfPost(
-              event.openEvent ?? true,
-            ),
+            if (showBottomWidgets)
+              _bottomWidgetOfPost(
+                event.openEvent ?? true,
+              ),
           ],
         ),
       ),
@@ -84,21 +87,15 @@ class EventWidget extends StatelessWidget {
     return CircleAvatar(
       radius: 22,
       backgroundColor: AppColors.primary.withOpacity(0.4),
-      // child: CircleAvatar(
-      //   radius: 20,
-      //   child: Image.network(image),
-      // ),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(30),
-          child: Image.network(image, fit: BoxFit.cover)),
+          child: Image.network(image, fit: BoxFit.cover,),),
     );
   }
 
   Widget _postImage(String image) {
     return InkWell(
-      onTap: () {
-        Get.toNamed(AppRoutes.eventDetails);
-      },
+      onTap: onPostTapped,
       child: Container(
         height: 200,
         width: Get.width,
@@ -125,11 +122,8 @@ class EventWidget extends StatelessWidget {
         const SizedBox(
           width: 13,
         ),
-        IconButton(
-          icon: const Icon(
-            Icons.chat_bubble_outline,
-          ),
-          onPressed: onCommentTapped,
+        const Icon(
+        Icons.chat_bubble_outline,
         ),
         const Spacer(),
         isEventOpen

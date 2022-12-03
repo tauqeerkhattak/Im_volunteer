@@ -9,7 +9,7 @@ class InputField extends StatelessWidget {
   final double? paddingVertical;
   final double? paddingHorizontal;
   final String? Function(String?)? validator;
-  final bool hideText;
+  final bool hideText, autoFocus;
 
   const InputField({
     super.key,
@@ -21,6 +21,7 @@ class InputField extends StatelessWidget {
     this.paddingHorizontal = 20,
     this.validator,
     this.hideText = false,
+    this.autoFocus = false,
   });
 
   @override
@@ -39,6 +40,7 @@ class InputField extends StatelessWidget {
           ],
         ),
         child: TextFormField(
+          autofocus: autoFocus,
           controller: controller,
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,

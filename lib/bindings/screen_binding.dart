@@ -9,7 +9,6 @@ import 'package:i_am_volunteer/controllers/paid_volunteer_screen_controller.dart
 import 'package:i_am_volunteer/controllers/user_profile_screen_controller.dart';
 import 'package:i_am_volunteer/controllers/volunteer_profile_screen_controller.dart';
 import 'package:i_am_volunteer/controllers/volunteer_registration_screen_controller.dart';
-import 'package:i_am_volunteer/ui/home/event_details.dart';
 
 import '../controllers/auth_controller.dart';
 import '../routes/app_routes.dart';
@@ -29,6 +28,5 @@ class ScreenBinding extends Bindings {
     Get.lazyPut(() => CustomNavigationDrawerController());
     Get.lazyPut(() => UserProfileScreenController());
     Get.lazyPut(() => VolunteerProfileScreenController());
-    Get.lazyPut(() => EventDetails());
   }
 }

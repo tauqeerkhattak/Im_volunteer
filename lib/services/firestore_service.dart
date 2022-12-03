@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/comment_model.dart';
 import '../models/user_model.dart';
 import '../utils/ui_utils.dart';
 import 'locator.dart';
@@ -60,6 +62,68 @@ class FirestoreService {
     final userDoc = await _db.collection('users').doc(uid).get();
     final user = UserModel.fromJson(userDoc.data()!);
     return user;
+  }
+
+  Future<void> addComment(String eventId, String comment) async {
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final user = await getUserByUid(uid);
+      final commentId =
+          _db.collection('events').doc(eventId).collection('comments').doc().id;
+      await _db
+          .collection('events')
+          .doc(eventId)
+          .collection('comments')
+          .doc(commentId)
+          .set({
+        'commentId': commentId,
+        'comment': comment,
+        'commentBy': user.toJson(),
+        'time': FieldValue.serverTimestamp(),
+        'likes': [],
+      });
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Stream<List<CommentModel>> getCommentsStream(String eventId) {
+    return _db
+        .collection('events')
+        .doc(eventId)
+        .collection('comments')
+        .orderBy('time', descending: true)
+        .snapshots()
+        .map((event) {
+      return event.docs.map((commentDoc) {
+        final data = commentDoc.data();
+        return CommentModel.fromJson(data);
+      }).toList();
+    });
+  }
+
+  Future<void> likeComment(String eventId, String commentId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await _db
+        .collection('events')
+        .doc(eventId)
+        .collection('comments')
+        .doc(commentId)
+        .update({
+      'likes': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<void> unlikeComment(String eventId, String commentId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await _db
+        .collection('events')
+        .doc(eventId)
+        .collection('comments')
+        .doc(commentId)
+        .update({
+      'likes': FieldValue.arrayRemove([uid]),
+    });
   }
 
   Future<String> getNameById(String uid) async {
