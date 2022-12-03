@@ -20,14 +20,15 @@ class CustomText extends StatelessWidget {
     this.color,
     this.weight,
     this.family,
-    this.enableUnderline = false, this.textAlign,
+    this.enableUnderline = false,
+    this.textAlign,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      textAlign: textAlign??TextAlign.justify,
+      textAlign: textAlign ?? TextAlign.justify,
       style: GoogleFonts.getFont(
         family ?? 'Inter',
         fontSize: fontSize,
@@ -40,7 +41,9 @@ class CustomText extends StatelessWidget {
                 Shadow(
                   offset: const Offset(15.0, 15.0),
                   blurRadius: 10.0,
-                  color: color!=null?color!.withOpacity(0.2):Colors.black.withOpacity(0.2),
+                  color: color != null
+                      ? color!.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.2),
                 ),
               ]
             : null,

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/models/event_model.dart';
 import 'package:i_am_volunteer/ui/account/user_profile_screen.dart';
 import 'package:i_am_volunteer/ui/account/volunteer_profile_screen.dart';
 import 'package:i_am_volunteer/ui/calender/calender_screen.dart';
@@ -10,8 +11,8 @@ import 'package:i_am_volunteer/ui/notification/notification_screen.dart';
 import 'package:i_am_volunteer/ui/paid_volunteer/paid_volunteer_screen.dart';
 
 import '../bindings/chat_bindings.dart';
+import '../bindings/event_binding.dart';
 import '../bindings/screen_binding.dart';
-import '../ui/account/account_screen.dart';
 import '../ui/auth/auth_dashboard.dart';
 import '../ui/auth/login.dart';
 import '../ui/auth/register.dart';
@@ -67,8 +68,14 @@ class AppRoutes {
     ),
     GetPage(
       name: eventDetails,
-      page: () => EventDetails(),
-      binding: ScreenBinding(),
+      page: () {
+        final args = Get.arguments;
+        final event = args['event'] as EventModel;
+        return EventDetails(
+          event: event,
+        );
+      },
+      binding: EventBinding(),
     ),
     GetPage(
       name: calenderScreen,
@@ -85,8 +92,8 @@ class AppRoutes {
       page: () => PaidVolunteerScreen(),
       binding: ScreenBinding(),
     ),
-   GetPage(
-      name:accountScreen,
+    GetPage(
+      name: accountScreen,
       page: () => UserProfileScreen(),
       binding: ScreenBinding(),
     ),

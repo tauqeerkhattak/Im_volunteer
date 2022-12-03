@@ -2,8 +2,6 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/custom_bottom_navbar_controller.dart';
-import 'package:i_am_volunteer/services/locator.dart';
-import 'package:i_am_volunteer/services/notification_service.dart';
 import 'package:i_am_volunteer/utils/app_colors.dart';
 
 import '../routes/app_routes.dart';
@@ -21,9 +19,6 @@ class CustomBottomNavBar extends GetView<CustomBottomNavBarController> {
           curve: Curves.ease,
           onItemSelected: (index) {
             controller.onSelectedTabChanged(index);
-            locator
-                .get<NotificationService>()
-                .showNotification('Hello', 'Test!');
           },
           items: <BottomNavyBarItem>[
             navyBar(icons: Icons.calendar_month, text: 'Calender'),

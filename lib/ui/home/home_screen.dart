@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/home_controller.dart';
-import 'package:i_am_volunteer/routes/app_routes.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 
 import '../../controllers/chat_screen_controller.dart';
+import '../../models/event_model.dart';
+import '../../routes/app_routes.dart';
 import '../../utils/app_colors.dart';
 import '../../widgets/custom_scaffold.dart';
+import '../../widgets/event.dart';
 
 class HomeScreen extends StatelessWidget {
   final controller = Get.find<HomeScreenController>();
@@ -44,91 +46,92 @@ class HomeScreen extends StatelessWidget {
           //   ),
           // ),
           StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .where("role", isEqualTo: "admin")
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .where("role", isEqualTo: "admin")
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
 
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text("Loading");
-                }
-                if (snapshot.data!.size == 0) {
-                  return const Center(child: Text("There is no Lead"));
-                }
-                return SizedBox(
-                  height: 120,
-                  child: ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      // itemCount: snapshot.data!.docs.length,
-                      // itemBuilder: ((context, index) {
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        return statusWidget(
-                            image: data['profile'], text: '${data['name']}');
-                      }).toList()),
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text("Loading");
+              }
+              if (snapshot.data!.size == 0) {
+                return const Center(child: Text("There is no Lead"));
+              }
+              return SizedBox(
+                height: 120,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  // itemCount: snapshot.data!.docs.length,
+                  // itemBuilder: ((context, index) {
+                  children: snapshot.data!.docs.map(
+                    (DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data()! as Map<String, dynamic>;
+                      return statusWidget(
+                          image: data['profile'], text: '${data['name']}');
+                    },
+                  ).toList(),
+                ),
+              );
+              //     return Text('nodata');
+              //   },),
+              // );
+            },
+          ),
+
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collection('events').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text("Loading");
+              }
+              if (snapshot.data!.size == 0) {
+                return const Center(
+                  child: Text(
+                    "There are no events!!",
+                  ),
                 );
-                //     return Text('nodata');
-                //   }),
-                // );
-              }),
-
-          StreamBuilder<QuerySnapshot>(
-              stream:
-                  FirebaseFirestore.instance.collection('events').snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return const Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Text("Loading");
-                }
-                if (snapshot.data!.size == 0) {
-                  return const Center(child: Text("There is no Lead"));
-                }
-                return Expanded(
-                    child: ListView(
-                        shrinkWrap: true,
-                        // itemCount: snapshot.data!.docs.length,
-                        // itemBuilder: ((context, index) {
-                        children: snapshot.data!.docs
-                            .map((DocumentSnapshot document) {
-                          Map<String, dynamic> data =
-                              document.data()! as Map<String, dynamic>;
-                          // print(Text(data['name']));
-                          // print("${base64Decode(data['image3'])}");
-                          // return LeadgenerationScreen(
-                          //     text: data['name'],
-                          //     icon: FontAwesomeIcons.hourglassEnd,
-                          //     press: () {
-                          //       // print("${base64Decode(data['image3'])}");
-                          //       // print("${Image.memory(base64Decode("put your base 64 string"))}");
-                          //       showDialog(
-                          //           context: context,
-                          //           builder: (BuildContext context) {
-                          //             return ShowDialog(data);
-                          //           });
-                          //     });
-                          return postWidget(
-                              title: data['title'],
-                              image: data['image'],
-                              name: data['adminName'],
-                              profileImage: data['adminImage'],
-                              openEvent: data['openEvent']);
-                        }).toList()));
-                //     return Text('nodata');
-                //   }),
-                // );
-              }),
+              }
+              return Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: snapshot.data!.docs.map(
+                    (document) {
+                      final data = document.data();
+                      final event = EventModel.fromJson(data);
+                      return EventWidget(
+                        event: event,
+                        onApplyForVolunteer: () {
+                          controller.onApplyVolunteer();
+                        },
+                        onPostTapped: () {
+                          Get.toNamed(
+                            AppRoutes.eventDetails,
+                            arguments: {
+                              'event': event,
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ).toList(),
+                ),
+              );
+              //     return Text('nodata');
+              //   }),
+              // );
+            },
+          ),
 
           // postWidget(image: AppAssets.eventPhoto, name: 'Dr. IJKL', profileImage: AppAssets.personImage3,openEvent: false),
           // postWidget(image: AppAssets.eventPhoto2, name: 'Dr. CDEF', profileImage: AppAssets.personImage2,openEvent: true)
@@ -272,4 +275,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,15 +1,10 @@
-
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserProfileScreenController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -22,11 +17,11 @@ class UserProfileScreenController extends GetxController {
   String? localImage, localImage1;
   // TextEditingController passwordController = TextEditingController();
   pick(imageType) async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? _imagePicker =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (_imagePicker != null) {
-      Uint8List bytes = await _imagePicker.readAsBytes();
+    final ImagePicker picker = ImagePicker();
+    final XFile? imagePicker =
+        await picker.pickImage(source: ImageSource.gallery);
+    if (imagePicker != null) {
+      Uint8List bytes = await imagePicker.readAsBytes();
       if (imageType == 1) {
         webImage = bytes;
       } else {
@@ -47,7 +42,6 @@ class UserProfileScreenController extends GetxController {
       UploadTask task = imageRef.putData(webImage!);
       await Future.value(task);
       localImage = await imageRef.getDownloadURL();
-      print("localimgae $localImage");
       FirebaseFirestore.instance
           .collection('users')
           .doc("CHBmVSIxK6gJeMnEYgcD4sVbGdF2")
@@ -63,7 +57,6 @@ class UserProfileScreenController extends GetxController {
       UploadTask task = imageRef.putData(webImage1!);
       await Future.value(task);
       localImage1 = await imageRef.getDownloadURL();
-      print("localimgae $localImage1");
       FirebaseFirestore.instance
           .collection('users')
           .doc("CHBmVSIxK6gJeMnEYgcD4sVbGdF2")
