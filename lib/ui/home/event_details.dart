@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:i_am_volunteer/controllers/event_detail_controller.dart';
 import 'package:i_am_volunteer/controllers/home_controller.dart';
+import 'package:i_am_volunteer/ui/admin/manageVolunteers/manage_volunteers.dart';
 import 'package:i_am_volunteer/utils/app_colors.dart';
+import 'package:i_am_volunteer/widgets/custom_button.dart';
 import 'package:i_am_volunteer/widgets/custom_scaffold.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 import 'package:intl/intl.dart';
@@ -71,7 +73,14 @@ class _EventDetailsState extends State<EventDetails>
   Widget _getBody() {
     return Stack(
       children: [
-        _postWidget(),
+        Column(
+          children: [
+            _postWidget(),
+            (FirebaseAuth.instance.currentUser!.email!.contains("admin"))?CustomButton(label: "Manage Volunteers", fontWeight: FontWeight.w500, textSize: 18, textColor: AppColors.primary, onTap: (){
+              Get.to(()=>ManageVolunteers());
+            }):SizedBox()
+          ],
+        ),
         Positioned(
           bottom: 0,
           child: _comments(),

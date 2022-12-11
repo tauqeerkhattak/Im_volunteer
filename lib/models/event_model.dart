@@ -7,6 +7,10 @@ class EventModel {
   String? image;
   bool? openEvent;
   String? title;
+  List<String>? applied;
+  List<String>? likes;
+
+
 
   EventModel({
     this.adminImage,
@@ -17,6 +21,8 @@ class EventModel {
     this.image,
     this.openEvent,
     this.title,
+    this.likes,
+    this.applied
   });
 
   EventModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +34,9 @@ class EventModel {
     image = json['image'];
     openEvent = json['openEvent'];
     title = json['title'];
+    likes = json['likes'].cast<String>();
+    applied = json['applied'].cast<String>();
+
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +49,8 @@ class EventModel {
     data['image'] = image;
     data['openEvent'] = openEvent;
     data['title'] = title;
+    data['likes'] = likes;
+    data['applied'] = applied;
     return data;
   }
 }

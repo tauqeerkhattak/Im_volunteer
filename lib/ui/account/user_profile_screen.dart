@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,8 @@ import '../../widgets/custom_text.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final controller = Get.find<UserProfileScreenController>();
+  final controllerAuth = Get.find<UserProfileScreenController>();
+
   UserProfileScreen({super.key});
 
   @override
@@ -23,7 +26,7 @@ class UserProfileScreen extends StatelessWidget {
       body:           StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('users')
-            .where('uid', isEqualTo: "Y3feimlhlSOu4iDotiSK9nIM5ZC2")
+            .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -347,6 +350,113 @@ class UserProfileScreen extends StatelessWidget {
                     ],
                   ),
 
+                  controller.authService.user!.email!.contains("admin")?SizedBox():Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        fontSize: 18,
+                        text: data['rollNo']==null?"Add Roll No":'${data['rollNo']}',
+                        color: AppColors.heading,
+                        weight: FontWeight.w400,
+                      ),
+                      IconButton(onPressed: (){
+                        Get.defaultDialog(
+                          title: "Update Roll No",
+                          content: Column(
+                            children: [
+                              InputField(
+                                paddingHorizontal: 15,
+                                paddingVertical: 0,
+                                controller: controller.rollNoController,
+                                hint: 'Roll No',
+                                suffixIcon: Icons.edit,
+                                validator: (ct){
+                                  if(controller.rollNoController.text.length<=6){
+                                    return "Dept name must be 6 character long";
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              CustomButton(
+                                height: 48,
+                                label: 'Update',
+                                onTap: () async{
+                                  if(controller.rollNoController.text.length>=6)
+                                    await FirebaseFirestore.instance
+                                        .collection("users")
+                                        .doc("Y3feimlhlSOu4iDotiSK9nIM5ZC2")
+                                        .update({"rollNo": controller.rollNoController.text}).then((value) => Get.back());
+                                },
+                                color: AppColors.primary.withOpacity(0.07),
+                                textColor: AppColors.primary,
+                                isShadow: false,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        );
+
+                      }, icon: Icon(Icons.edit))
+                    ],
+                  ),
+                  controller.authService.user!.email!.contains("admin")?SizedBox():Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        fontSize: 18,
+                        text: data['batch']==null?"Add Batch":'${data['batch']}',
+                        color: AppColors.heading,
+                        weight: FontWeight.w400,
+                      ),
+                      IconButton(onPressed: (){
+                        Get.defaultDialog(
+                          title: "Update batch",
+                          content: Column(
+                            children: [
+                              InputField(
+                                paddingHorizontal: 15,
+                                paddingVertical: 0,
+                                controller: controller.batchController,
+                                hint: 'batch',
+                                suffixIcon: Icons.edit,
+                                validator: (ct){
+                                  if(controller.batchController.text.length<=4){
+                                    return "Dept name must be 6 character long";
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              CustomButton(
+                                height: 48,
+                                label: 'Update',
+                                onTap: () async{
+                                  if(controller.batchController.text.length>=6)
+                                    await FirebaseFirestore.instance
+                                        .collection("users")
+                                        .doc("Y3feimlhlSOu4iDotiSK9nIM5ZC2")
+                                        .update({"batch": controller.batchController.text}).then((value) => Get.back());
+                                },
+                                color: AppColors.primary.withOpacity(0.07),
+                                textColor: AppColors.primary,
+                                isShadow: false,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        );
+
+                      }, icon: Icon(Icons.edit))
+                    ],
+                  ),
+
                   const SizedBox(
                     height: 20,
                   ),
@@ -354,7 +464,7 @@ class UserProfileScreen extends StatelessWidget {
               ),
             ),
 
-            Column(
+            controller.authService.user!.email!.contains("admin")?SizedBox():Column(
               children: [
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),

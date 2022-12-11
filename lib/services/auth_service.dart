@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:i_am_volunteer/services/locator.dart';
 import 'package:i_am_volunteer/utils/ui_utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_model.dart';
 import 'firestore_service.dart';
@@ -38,6 +39,8 @@ class AuthService {
   }
 
   Future<bool> logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.clear();
     try {
       await _auth.signOut();
       return true;

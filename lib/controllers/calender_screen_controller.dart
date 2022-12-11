@@ -15,8 +15,8 @@ class CalenderScreenController extends GetxController{
   Rx<DateTime> focusedDay = DateTime.now().obs;
   Rx<DateTime> selectedDay=DateTime.now().obs;
   final kToday = DateTime.now();
-  late DateTime kFirstDay;
-  late DateTime kLastDay;
+   DateTime kFirstDay = DateTime(2022);
+   DateTime kLastDay= DateTime(2100);
   CustomBottomNavBarController bottomNavigationController = Get.find(tag: AppRoutes.kBottomNavigationController);
   Future<bool> onWillPop() {
     bottomNavigationController.selectedNav.value = 2;
@@ -27,32 +27,15 @@ class CalenderScreenController extends GetxController{
 
   @override
   void onInit() {
-
-    kFirstDay= DateTime(kToday.year, kToday.month - 3, kToday.day);
-    kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);
-    int selectedDT=kLastDay.millisecondsSinceEpoch;
-    FirebaseFirestore.instance.collection('events').doc("r8mwOsRXZxpBRYVBCYOb").update({
-      'date': selectedDT
+    FirebaseFirestore.instance
+        .collection('events')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        print("${doc['eventDate']}");
+        toHighlight.add(DateTime.fromMillisecondsSinceEpoch(doc['eventDate']));
+      });
     });
-    FirebaseFirestore.instance.collection('events').doc("O14vbI6z9DaNjB1Qm7ds").update({
-      'date': kFirstDay.microsecondsSinceEpoch
-    });
-    var k = DateTime.fromMillisecondsSinceEpoch(selectedDT);
-    // toHighlight.add(kLastDay);
-    toHighlight.add(kFirstDay);
-    toHighlight.add(k);
-    // toHighlight= List<DateTime>.generate(60, (i) =>
-    //     DateTime.utc(
-    //       DateTime.now().year,
-    //       DateTime.now().month,
-    //       DateTime.now().day,
-    //     ).add(Duration(days: i,)));
-
-
-    // to insert database you can use dateTimeObject.millisecondsSinceEpoch to convert it to an int and save that to your db.
-    //
-    // if you want you can use DateTime.fromMillisecondsSinceEpoch(msIntFromServer) to convert it back to a DateTime object.
-
     super.onInit();
   }
 }

@@ -126,6 +126,27 @@ class FirestoreService {
     });
   }
 
+  Future<void> likeEvent(String eventId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await _db.collection('events').doc(eventId).update({
+      'likes': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<void> applyEvent(String eventId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await _db.collection('events').doc(eventId).update({
+      'applied': FieldValue.arrayUnion([uid]),
+    });
+  }
+
+  Future<void> unlikeEvent(String eventId) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    await _db.collection('events').doc(eventId).update({
+      'likes': FieldValue.arrayRemove([uid]),
+    });
+  }
+
   Future<String> getNameById(String uid) async {
     final userDoc = await _db.collection('users').doc(uid).get();
     final user = UserModel.fromJson(userDoc.data()!);

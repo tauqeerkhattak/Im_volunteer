@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/controllers/custom_navigation_drawer_controller.dart';
 import 'package:i_am_volunteer/controllers/home_controller.dart';
+import 'package:i_am_volunteer/main.dart';
+import 'package:i_am_volunteer/ui/event/add_event.dart';
+import 'package:i_am_volunteer/widgets/custom_button.dart';
 import 'package:i_am_volunteer/widgets/custom_text.dart';
 
 import '../../controllers/chat_screen_controller.dart';
@@ -14,6 +18,8 @@ import '../../widgets/event.dart';
 class HomeScreen extends StatelessWidget {
   final controller = Get.find<HomeScreenController>();
   final chatController = Get.find<ChatScreenController>();
+  final controllerAuth = Get.find<CustomNavigationDrawerController>();
+
   HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
@@ -112,7 +118,7 @@ class HomeScreen extends StatelessWidget {
                       return EventWidget(
                         event: event,
                         onApplyForVolunteer: () {
-                          controller.onApplyVolunteer();
+                          controller.onApplyVolunteer(data['eventId']);
                         },
                         onPostTapped: () {
                           Get.toNamed(
@@ -132,10 +138,13 @@ class HomeScreen extends StatelessWidget {
               // );
             },
           ),
-
-          // postWidget(image: AppAssets.eventPhoto, name: 'Dr. IJKL', profileImage: AppAssets.personImage3,openEvent: false),
-          // postWidget(image: AppAssets.eventPhoto2, name: 'Dr. CDEF', profileImage: AppAssets.personImage2,openEvent: true)
-        ],
+          controllerAuth.authService.user!.email!.contains("admin")?Container(
+              height: 40,
+              margin: EdgeInsets.only(bottom: 50,top: 10),
+              child: CustomButton(label: "Add Event",color: AppColors.secondary,textColor: AppColors.primary, onTap: (){
+                Get.to(()=> AddEvent());
+              })):SizedBox()
+       ],
       ),
     );
   }
@@ -254,7 +263,7 @@ class HomeScreen extends StatelessWidget {
         isEventOpen
             ? (controller.indicator?CircularProgressIndicator(color: AppColors.secondary,):GestureDetector(
           onTap: () {
-            controller.onApplyVolunteer();
+            // controller.onApplyVolunteer(data['eventId']);
 
           },
           child: Container(

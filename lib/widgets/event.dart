@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/controllers/custom_navigation_drawer_controller.dart';
+import 'package:i_am_volunteer/controllers/event_controller.dart';
 import 'package:i_am_volunteer/models/event_model.dart';
 
 import '../routes/app_routes.dart';
@@ -7,12 +11,15 @@ import '../utils/app_colors.dart';
 import 'custom_text.dart';
 
 class EventWidget extends StatelessWidget {
+  final controller = Get.put(EventController());
+  final controllerUser = Get.find<CustomNavigationDrawerController>();
+
   final EventModel event;
   final Function()? onApplyForVolunteer;
   final Function()? onPostTapped;
   final bool showBottomWidgets;
 
-  const EventWidget({
+  EventWidget({
     Key? key,
     required this.event,
     this.onApplyForVolunteer,
@@ -22,6 +29,10 @@ class EventWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUid = FirebaseAuth.instance.currentUser;
+    RxBool isLiked = event.likes!.contains(currentUid!.uid).obs;
+    RxBool isApplied = event.applied!.contains(currentUid.uid).obs;
+
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
       child: Container(
@@ -75,8 +86,7 @@ class EventWidget extends StatelessWidget {
             const SizedBox(height: 7),
             if (showBottomWidgets)
               _bottomWidgetOfPost(
-                event.openEvent ?? true,
-              ),
+                  event.openEvent ?? true, isLiked, event, isApplied),
           ],
         ),
       ),
@@ -88,8 +98,12 @@ class EventWidget extends StatelessWidget {
       radius: 22,
       backgroundColor: AppColors.primary.withOpacity(0.4),
       child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: Image.network(image, fit: BoxFit.cover,),),
+        borderRadius: BorderRadius.circular(30),
+        child: Image.network(
+          image,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
@@ -113,38 +127,76 @@ class EventWidget extends StatelessWidget {
     );
   }
 
-  Widget _bottomWidgetOfPost(bool isEventOpen) {
+  Widget _bottomWidgetOfPost(bool isEventOpen, isLiked, event, isApplied) {
     return Row(
       children: [
-        const Icon(
-          Icons.favorite_border,
+        Obx(
+          () => InkWell(
+            onTap: () async {
+              if (isLiked.value) {
+                await controller.unlikeEvent(
+                  event.eventId!,
+                );
+              } else {
+                await controller.likeEvent(
+                  event.eventId!,
+                );
+              }
+              isLiked.value = !isLiked.value;
+            },
+            child: Icon(
+              isLiked.value ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+              color: Colors.red,
+            ),
+          ),
         ),
         const SizedBox(
           width: 13,
         ),
-        const Icon(
-        Icons.chat_bubble_outline,
+        IconButton(
+          onPressed: onPostTapped,
+          icon: Icon(Icons.messenger_outline_sharp),
+          color: AppColors.primary,
         ),
         const Spacer(),
         isEventOpen
-            ? GestureDetector(
-                onTap: onApplyForVolunteer,
-                child: Container(
-                  height: 40,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppColors.primary.withOpacity(0.4),
-                      width: 2,
+            ? (
+            controllerUser.authService.user!.email!.contains("admin")?SizedBox():(!isApplied.value
+                ? GestureDetector(
+                    onTap: onApplyForVolunteer,
+                    child: Container(
+                      height: 40,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primary.withOpacity(0.4),
+                          width: 2,
+                        ),
+                      ),
+                      child: const CustomText(
+                        text: 'Apply For Volunteer',
+                        weight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  child: const CustomText(
-                    text: 'Apply For Volunteer',
-                    weight: FontWeight.w600,
-                  ),
-                ),
-              )
+                  )
+                : GestureDetector(
+                    child: Container(
+                      height: 40,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: AppColors.primary.withOpacity(0.4),
+                          width: 2,
+                        ),
+                      ),
+                      child: const CustomText(
+                        text: 'Applied',
+                        weight: FontWeight.w600,
+                      ),
+                    ),
+                  )))
             : const SizedBox()
       ],
     );

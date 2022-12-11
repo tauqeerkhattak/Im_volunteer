@@ -4,12 +4,18 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:i_am_volunteer/services/auth_service.dart';
+import 'package:i_am_volunteer/services/locator.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfileScreenController extends GetxController {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController rollNoController = TextEditingController();
+  TextEditingController batchController = TextEditingController();
+  final authService = locator.get<AuthService>();
+
   // TextEditingController passwordController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController deptController = TextEditingController();

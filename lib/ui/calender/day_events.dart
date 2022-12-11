@@ -30,7 +30,7 @@ class DayEvents extends StatelessWidget {
 
           StreamBuilder<QuerySnapshot>(
               stream:
-              FirebaseFirestore.instance.collection('events').where('date',isEqualTo: data).snapshots(),
+              FirebaseFirestore.instance.collection('events').where('eventDate',isEqualTo: data).snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasError) {
@@ -106,7 +106,7 @@ class DayEvents extends StatelessWidget {
         isEventOpen
             ? GestureDetector(
           onTap: () {
-            homeController.onApplyVolunteer();
+            // homeController.onApplyVolunteer();
           },
           child: Container(
             height: 40,
